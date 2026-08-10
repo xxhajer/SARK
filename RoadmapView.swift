@@ -10,7 +10,7 @@ import SwiftUI
 // MARK: - Main Roadmap View
 struct RoadmapView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var selectedTab: Int = 1 // 1 تعني التبويب المحدد لـ Projects
+    @State private var selectedTab: BottomTab = .projects
 
     @State private var stages: [RoadmapStage] = [
         RoadmapStage(
@@ -108,28 +108,18 @@ struct RoadmapView: View {
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 24) {
-                    // Top Navigation Bar
                     headerBar
-
-                    // Top Segmented Progress Bar & Stage Indicator
                     topProgressBarSection
-
-                    // Circular Progress Gauge Card
                     circularGaugeSection
-
-                    // Timeline Stages List
                     timelineSection
 
-                    // Spacer for bottom tab bar clearing
                     Spacer(minLength: 90)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 12)
             }
 
-            // Shared Custom Tab Bar Component
-            CustomTabBar(selectedTab: $selectedTab)
-                .padding(.bottom, 10)
+            BottomNavBarView(selectedTab: $selectedTab)
         }
         .navigationBarHidden(true)
     }
@@ -223,7 +213,7 @@ struct RoadmapView: View {
         .padding(.vertical, 10)
     }
 
-    // MARK: Timeline Steps Section
+    // MARK: Timeline Steps Section (التعديل الأساسي هنا)
     private var timelineSection: some View {
         VStack(alignment: .leading, spacing: 14) {
             ForEach(stages.indices, id: \.self) { index in
@@ -234,7 +224,7 @@ struct RoadmapView: View {
                         .padding(.top, 6)
                 }
 
-                NavigationLink(value: stages[index]) {
+                NavigationLink(destination: RoadmapDetailsView(stage: $stages[index])) {
                     TimelineStepView(
                         title: stages[index].title,
                         subtitle: stages[index].subtitle,
@@ -243,11 +233,6 @@ struct RoadmapView: View {
                     )
                 }
                 .buttonStyle(PlainButtonStyle())
-            }
-        }
-        .navigationDestination(for: RoadmapStage.self) { stage in
-            if let bindingIndex = stages.firstIndex(where: { $0.id == stage.id }) {
-                RoadmapDetailsView(stage: $stages[bindingIndex])
             }
         }
     }
@@ -402,6 +387,51 @@ struct TimelineStepView: View {
             return Color("appGreen")
         case .inProgress, .upcoming:
             return .white
+        }
+    }
+}
+
+enum BottomTab {
+    case home
+    case projects
+    case profile
+}
+
+struct BottomNavBarView: View {
+    @Binding var selectedTab: BottomTab
+
+    var body: some View {
+        HStack {
+            Spacer()
+
+            buttonItem(title: "Home", icon: "house", tab: .home)
+            Spacer()
+
+            buttonItem(title: "Projects", icon: "folder", tab: .projects)
+            Spacer()
+
+            buttonItem(title: "Profile", icon: "person", tab: .profile)
+            Spacer()
+        }
+        .padding(.vertical, 12)
+        .background(
+            Capsule()
+                .fill(Color.white)
+                .shadow(color: Color.black.opacity(0.08), radius: 16, x: 0, y: 6)
+        )
+        .padding(.horizontal, 24)
+        .padding(.bottom, 8)
+    }
+
+    private func buttonItem(title: String, icon: String, tab: BottomTab) -> some View {
+        Button(action: { selectedTab = tab }) {
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 20, weight: selectedTab == tab ? .bold : .regular))
+                Text(title)
+                    .font(.system(size: 11, weight: selectedTab == tab ? .bold : .medium))
+            }
+            .foregroundColor(selectedTab == tab ? Color("appGreen") : Color("priemary texts"))
         }
     }
 }
