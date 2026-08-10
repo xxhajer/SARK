@@ -1,13 +1,6 @@
-//
-//  profile.swift
-//  SARK
-//
-//  Created by hajer almejel on 26/02/1448 AH.
-//
 import SwiftUI
 
 struct profile: View {
-    @State private var selectedTab = 2
     @State private var showEditProfile = false
     @State private var showNotifications = false
     @State private var profileImageData: Data? = nil
@@ -29,7 +22,6 @@ struct profile: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                     
                     HStack {
-                        // زر الجرس (رجعناه لشكله الأصلي بدون أي كود صورة)
                         Button(action: {
                             showNotifications = true
                         }) {
@@ -54,7 +46,6 @@ struct profile: View {
                 
                 // كرت البروفايل
                 VStack(spacing: 13) {
-                    // الصورة الشخصية (تعرض صورة المستخدم لو موجودة، وإلا الافتراضية)
                     Group {
                         if let data = profileImageData, let uiImage = UIImage(data: data) {
                             Image(uiImage: uiImage)
@@ -209,9 +200,6 @@ struct profile: View {
                 )
                 .padding(.bottom, 100)
             }
-            
-            CustomTabBar(selectedTab: $selectedTab)
-                .padding(.bottom, 10)
         }
         .sheet(isPresented: $showEditProfile) {
             EditProfileView(userName: $userName, userEmail: $userEmail, profileImageData: $profileImageData)
