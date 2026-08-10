@@ -15,7 +15,6 @@ struct MyBusinessesView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var searchText: String = ""
     
-    // القائمة فارغة لعرض الواجهة الفاضية في البداية
     @State private var businesses: [BusinessItem] = []
     
     var filteredBusinesses: [BusinessItem] {
@@ -27,22 +26,24 @@ struct MyBusinessesView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack(alignment: .bottom) {
+            Color("Background")
+                .ignoresSafeArea()
             
-            // Header Bar
-            HStack {
-                Button(action: { dismiss() }) {
-                    Image(systemName: "arrow.left")
-                        .font(.system(size: 20, weight: .regular))
-                        .foregroundColor(Color("priemary texts"))
-                }
-                Spacer()
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 16)
-            .padding(.bottom, 12)
-
             ScrollView(showsIndicators: false) {
+                // Header Bar
+                HStack {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "arrow.left")
+                            .font(.system(size: 20, weight: .regular))
+                            .foregroundColor(Color("priemary texts"))
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                .padding(.bottom, 12)
+                
                 VStack(alignment: .leading, spacing: 18) {
                     
                     // Title Section
@@ -80,7 +81,6 @@ struct MyBusinessesView: View {
                     // CONDITION: Empty State vs Businesses List
                     if businesses.isEmpty {
                         
-                        // ===== الواجهة الفاضية (باستخدام صورة sad-fac) =====
                         VStack(spacing: 16) {
                             Spacer().frame(height: 30)
                             
@@ -89,7 +89,6 @@ struct MyBusinessesView: View {
                                 .foregroundColor(Color("priemary texts"))
                                 .multilineTextAlignment(.center)
 
-                            // صورة الوجه الحزين المضافة في الـ Assets
                             Image("sad-fac")
                                 .resizable()
                                 .scaledToFit()
@@ -100,7 +99,6 @@ struct MyBusinessesView: View {
                                 .foregroundColor(Color("priemary texts"))
                                 .padding(.top, 16)
 
-                            // زر ينقل فوراً لشاشة StartFromScratchView
                             NavigationLink(destination: StartFromScratchView()) {
                                 HStack {
                                     Text("+New Business")
@@ -114,7 +112,6 @@ struct MyBusinessesView: View {
                         
                     } else {
                         
-                        // ===== الواجهة المليانة (عند وجود مشاريع) =====
                         VStack(spacing: 16) {
                             ForEach(filteredBusinesses) { item in
                                 BusinessCardView(item: item)
@@ -135,7 +132,6 @@ struct MyBusinessesView: View {
                 .padding(.bottom, 100)
             }
         }
-        .background(Color("Background").ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
     }
 }
@@ -147,7 +143,6 @@ private struct BusinessCardView: View {
     var body: some View {
         NavigationLink(destination: IdeaEvaluationView()) {
             HStack(spacing: 16) {
-                // Icon Background
                 ZStack {
                     RoundedRectangle(cornerRadius: 16)
                         .fill(Color("appGreen"))
