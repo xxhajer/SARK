@@ -18,7 +18,7 @@ struct MainTabView: View {
                 case 0:
                     HomeView()
                 case 1:
-                    MyBusinesseView()
+                    MyBusinessesView()
                 case 2:
                     profile()
                 default:
