@@ -1,21 +1,29 @@
+//
+//  Untitled.swift
+//  SARK
+//
+//  Created by hajer almejel on 22/02/1448 AH.
+//
+
 import SwiftUI
 
 struct CustomTabBar: View {
     @Binding var selectedTab: Int
     
     var body: some View {
-        HStack(spacing: 48) {
-            // Home - Index 0
+        HStack {
             TabBarItem(icon: "house", title: "Home", isSelected: selectedTab == 0) {
                 selectedTab = 0
             }
             
-            // Projects - Index 1
+            Spacer()
+            
             TabBarItem(icon: "folder", title: "Projects", isSelected: selectedTab == 1) {
                 selectedTab = 1
             }
             
-            // Profile - Index 2
+            Spacer()
+            
             TabBarItem(icon: "person", title: "Profile", isSelected: selectedTab == 2) {
                 selectedTab = 2
             }
@@ -43,11 +51,7 @@ struct TabBarItem: View {
                 Text(title)
                     .font(.system(size: 11, weight: .regular))
             }
-            .frame(width: 54) // Keeps hit targets consistent and items centered
-            .foregroundColor(isSelected ? Color("appGreen") : Color("faded text"))
+            .foregroundColor(isSelected ? .greeen : .fadedText)
         }
     }
 }
-
-            
-           
