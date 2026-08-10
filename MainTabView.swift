@@ -16,13 +16,13 @@ struct MainTabView: View {
             Group {
                 switch selectedTab {
                 case 0:
-                    Text("Hello, World!")
+                    HomeView()
                 case 1:
-                    projectDashBoard()// مؤقت لين تبنينها
+                    MyBusinesseView()
                 case 2:
                     profile()
                 default:
-                    projectDashBoard()
+                   HomeView()
                 }
             }
 
