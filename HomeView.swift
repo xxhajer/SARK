@@ -15,10 +15,12 @@ struct HomeView: View {
     }
     
     var body: some View {
-        homeContent
-            .navigationBarHidden(true)
-            .ignoresSafeArea(.keyboard)
-    }
+        NavigationStack {
+              homeContent
+                  .navigationBarHidden(true)
+                  .ignoresSafeArea(.keyboard)
+          }
+      }
     
     // MARK: - Home Content
     private var homeContent: some View {
@@ -39,14 +41,23 @@ struct HomeView: View {
     // MARK: - Notification Button
     private var notificationButton: some View {
         HStack {
-            Spacer()
             NavigationLink(destination: NotificationsView()) {
-                Image(systemName: "bell")
-                    .font(.system(size: 24))
-                    .foregroundColor(Color("priemary texts"))
+                Image(systemName: "bell.fill")
+                    .font(.system(size: 20))
+                    .foregroundColor(.black)
+                    .frame(width: 44, height: 44)
+                    .background(Circle().fill(Color.white).shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 3))
+                    .overlay(
+                        Circle()
+                            .fill(Color.red)
+                            .frame(width: 10, height: 9)
+                            .offset(x: 13, y: -13)
+                    )
             }
-            .padding(.trailing, 24)
+            .padding(.leading, 24)
             .padding(.top, 16)
+            
+            Spacer()
         }
     }
     
@@ -75,18 +86,18 @@ struct HomeView: View {
     // MARK: - Business Cards Section
     private var businessCardsSection: some View {
         HStack(spacing: 12) {
-            BusinessCardView(
+            BusinessCardView1(
                 icon: "bag",
                 title: "My Businesses",
                 description: "View and manage\nyour businesses",
                 destination: AnyView(MyBusinessesView())
             )
             
-            BusinessCardView(
+            BusinessCardView1(
                 icon: "plus",
                 title: "New Business",
                 description: "Start a new business\nwith AI guidance",
-                destination: AnyView(NewBusinessView())
+                destination: AnyView(MyBusinessesView())
             )
         }
         .padding(.horizontal, 24)
@@ -130,7 +141,7 @@ struct HomeView: View {
 }
 
 // MARK: - Business Card Component
-struct BusinessCardView: View {
+struct BusinessCardView1: View {
     let icon: String
     let title: String
     let description: String
