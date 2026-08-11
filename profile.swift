@@ -4,15 +4,18 @@ struct profile: View {
     @State private var showEditProfile = false
     @State private var showNotifications = false
     @State private var profileImageData: Data? = nil
-    
-    @State private var userName: String = "Leena"
+    @State private var showDeleteAlert = false
+
+    @State private var userName: String = UserDefaults.standard.string(forKey: "userName") ?? "Leena"
     @State private var userEmail: String = ""
-    
+
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+
     var body: some View {
         ZStack(alignment: .bottom){
             Color("Background")
                 .ignoresSafeArea()
-            
+
             ScrollView() {
                 // صف الهيدر
                 ZStack() {
@@ -198,6 +201,23 @@ struct profile: View {
                         .frame(width: 380, height: 190)
                         .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                 )
+                .padding(.bottom, 20)
+
+                // زر حذف الحساب
+                Button(action: {
+                    showDeleteAlert = true
+                }) {
+                    Text("Delete Your Account")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.red)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color.red, lineWidth: 1)
+                        )
+                }
+                .padding(.horizontal, 20)
                 .padding(.bottom, 100)
             }
         }
@@ -207,6 +227,20 @@ struct profile: View {
         .fullScreenCover(isPresented: $showNotifications) {
             NotificationsView()
         }
+        .alert("Delete Your Account", isPresented: $showDeleteAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                deleteAccount()
+            }
+        } message: {
+            Text("This will erase your name and take you back to the beginning. Are you sure?")
+        }
+    }
+
+    // MARK: - Delete Account
+    private func deleteAccount() {
+        UserDefaults.standard.removeObject(forKey: "userName")
+        hasCompletedOnboarding = false
     }
 }
 
