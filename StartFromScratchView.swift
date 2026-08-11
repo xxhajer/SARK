@@ -2,19 +2,25 @@
 //  StartFromScratchView.swift
 //  SARK
 //
+//  Created by hajer almejel on 26/02/1448 AH.
+//
+
+//
+//  StartFromScratchView.swift
+//  SARK
+//
 //  Created by wafa saifelislam mohamed on 22/02/1448 AH.
 //
 
 import SwiftUI
 
 struct StartFromScratchView: View {
-    @State var selectedTab: Int = 0
+    @Environment(\.dismiss) private var dismiss
     
     // MARK: - State Properties
     @State private var ideaText: String = ""
     @State private var selectedIndustry: String? = nil
     @State private var navigateToNext: Bool = false
-    @State private var navigateToProjects: Bool = false // متغيّر التنقل لشاشة المشاريع
     
     private let characterLimit = 1000
     
@@ -23,15 +29,29 @@ struct StartFromScratchView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            
+        NavigationStack {
             VStack(alignment: .leading, spacing: 0) {
+                
+                // زر إغلاق الفلو
+                HStack {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(Color("priemary texts"))
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
+                
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 24) {
                         
                         // 1. Titles Section
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("What’s your\nbusiness idea?")
+                            Text("What's your\nbusiness idea?")
                                 .font(.system(size: 32, weight: .bold))
                                 .foregroundColor(Color("priemary texts"))
                                 .fixedSize(horizontal: false, vertical: true)
@@ -135,26 +155,11 @@ struct StartFromScratchView: View {
                 }
             }
             .padding(.horizontal, 24)
-            
-            // MARK: Floating Custom Tab Bar
-            CustomTabBar(selectedTab: Binding(
-                get: { selectedTab },
-                set: { newValue in
-                    selectedTab = newValue
-                    if newValue == 1 {
-                        navigateToProjects = true
-                    }
-                }
-            ))
-            .padding(.bottom, 8)
-        }
-        .background(Color("Background").ignoresSafeArea())
-        .navigationBarBackButtonHidden(true)
-        .navigationDestination(isPresented: $navigateToNext) {
-            TellUsAboutYouView()
-        }
-        .navigationDestination(isPresented: $navigateToProjects) {
-            MyBusinessesView()
+            .background(Color("Background").ignoresSafeArea())
+            .navigationBarBackButtonHidden(true)
+            .navigationDestination(isPresented: $navigateToNext) {
+                TellUsAboutYouView()
+            }
         }
     }
 }
@@ -194,7 +199,5 @@ struct IndustryCard: View {
 }
 
 #Preview {
-    NavigationStack {
-        StartFromScratchView()
-    }
+    StartFromScratchView()
 }
