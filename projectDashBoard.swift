@@ -1,13 +1,7 @@
-//
-//  SwiftUIView.swift
-//  SARK
-//
-//  Created by hajer almejel on 25/02/1448 AH.
-//
-
 import SwiftUI
 
 struct projectDashBoard: View {
+    @Environment(\.dismiss) private var dismiss
     @State private var selectedTab = 2
 
     var body: some View {
@@ -17,31 +11,30 @@ struct projectDashBoard: View {
 
             ScrollView {
                 VStack(alignment: .center, spacing: 0) {
-                    
-                    
+
                     HStack(spacing: 35) {
-                        
-                        // زر الرجوع
-                        Button(action: {}) {
+
+                        Button(action: {
+                            dismiss()
+                        }) {
                             Image(systemName: "arrow.left")
                                 .font(.system(size: 25, weight: .semibold))
                                 .foregroundColor(.black)
                         }
-                        
-                        // العنوان
+
                         Text("Lena's coffee shop")
                             .font(.system(size: 28, weight: .bold))
                             .foregroundColor(.black)
-                        
+
                         Spacer()
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
                     .padding(.bottom, 30)
-                    // كرت التقدم
+
                     VStack(alignment: .leading, spacing: 20) {
                         HStack {
-                            
+
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(Color.greeen)
                                 .frame(width: 55, height: 65)
@@ -50,7 +43,7 @@ struct projectDashBoard: View {
                                         .foregroundColor(.white)
                                         .font(.system(size:0))
                                 )
-                            
+
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Current Stage")
                                     .foregroundColor(.fadedText)
@@ -59,9 +52,9 @@ struct projectDashBoard: View {
                                     .foregroundColor(.black)
                                     .font(.system(size: 20, weight: .bold))
                             }
-                            
+
                             Spacer()
-                            
+
                             VStack(alignment: .trailing, spacing: 15) {
                                 Text("Overall Progress")
                                     .foregroundColor(.black)
@@ -71,7 +64,7 @@ struct projectDashBoard: View {
                                     .font(.system(size: 35, weight: .bold))
                             }
                         }
-                        
+
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
                                 RoundedRectangle(cornerRadius: 20)
@@ -92,10 +85,10 @@ struct projectDashBoard: View {
                             .frame(width: 380, height: 150)
                     )
                     .padding(.bottom, 25)
-                    // بوكس Today's Goal
+
                     HStack(spacing: 20) {
                         Image("goal")
-                           
+
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Today's Goal")
                                 .foregroundColor(.insideTheGreen)
@@ -119,7 +112,7 @@ struct projectDashBoard: View {
                         .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                     )
                     .padding(.bottom, 30)
-                    // صف الكرتين
+
                     HStack(spacing: 5) {
 
                         VStack(alignment: .leading, spacing: 13) {
@@ -177,33 +170,39 @@ struct projectDashBoard: View {
                         HStack(spacing: 12) {
                             HStack(spacing: 0) {
 
-                                VStack(spacing: 10) {
-                                    RoundedRectangle(cornerRadius: 18)
-                                        .fill(Color.white)
-                                        .frame(width: 160, height: 90)
-                                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
-                                        .overlay(
-                                            Image("ideaEva")
-                                        )
-                                    Text("Idea Evaluation")
-                                        .font(.system(size: 16, weight: .semibold))
-                                        .foregroundColor(.black)
+                                NavigationLink(destination: IdeaEvaluationView()) {
+                                    VStack(spacing: 10) {
+                                        RoundedRectangle(cornerRadius: 18)
+                                            .fill(Color.white)
+                                            .frame(width: 160, height: 90)
+                                            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                                            .overlay(
+                                                Image("ideaEva")
+                                            )
+                                        Text("Idea Evaluation")
+                                            .font(.system(size: 16, weight: .semibold))
+                                            .foregroundColor(.black)
+                                    }
+                                    .frame(maxWidth: .infinity)
                                 }
-                                .frame(maxWidth: .infinity)
+                                .buttonStyle(PlainButtonStyle())
 
-                                VStack(spacing: 10) {
-                                    RoundedRectangle(cornerRadius: 18)
-                                        .fill(Color.white)
-                                        .frame(width: 160, height: 90)
-                                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
-                                        .overlay(
-                                            Image("Roadmap")
-                                        )
-                                    Text("Roadmap")
-                                        .font(.system(size: 16, weight: .semibold))
-                                        .foregroundColor(.black)
+                                NavigationLink(destination: RoadmapView()) {
+                                    VStack(spacing: 10) {
+                                        RoundedRectangle(cornerRadius: 18)
+                                            .fill(Color.white)
+                                            .frame(width: 160, height: 90)
+                                            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                                            .overlay(
+                                                Image("Roadmap")
+                                            )
+                                        Text("Roadmap")
+                                            .font(.system(size: 16, weight: .semibold))
+                                            .foregroundColor(.black)
+                                    }
+                                    .frame(maxWidth: .infinity)
                                 }
-                                .frame(maxWidth: .infinity)
+                                .buttonStyle(PlainButtonStyle())
                             }
                         }
                         Rectangle()
@@ -216,13 +215,15 @@ struct projectDashBoard: View {
                 }
                 .padding(.bottom, 100)
             }
-
-            CustomTabBar(selectedTab: $selectedTab)
-                .padding(.bottom, 10)
         }
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
 #Preview {
-    projectDashBoard()
+    NavigationStack {
+        projectDashBoard()
+    }
 }
