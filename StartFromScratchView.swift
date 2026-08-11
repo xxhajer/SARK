@@ -1,21 +1,8 @@
-//
-//  StartFromScratchView.swift
-//  SARK
-//
-//  Created by hajer almejel on 26/02/1448 AH.
-//
-
-//
-//  StartFromScratchView.swift
-//  SARK
-//
-//  Created by wafa saifelislam mohamed on 22/02/1448 AH.
-//
-
 import SwiftUI
 
 struct StartFromScratchView: View {
     @Environment(\.dismiss) private var dismiss
+    var onFinishCreation: (() -> Void)? = nil
     
     // MARK: - State Properties
     @State private var ideaText: String = ""
@@ -158,7 +145,7 @@ struct StartFromScratchView: View {
             .background(Color("Background").ignoresSafeArea())
             .navigationBarBackButtonHidden(true)
             .navigationDestination(isPresented: $navigateToNext) {
-                TellUsAboutYouView()
+                TellUsAboutYouView(onFinishCreation: onFinishCreation)
             }
         }
     }
