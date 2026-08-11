@@ -14,6 +14,7 @@ struct BusinessItem: Identifiable {
 struct MyBusinessesView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var searchText: String = ""
+    @State private var showNewBusiness = false
     
     @State private var businesses: [BusinessItem] = []
     
@@ -99,11 +100,11 @@ struct MyBusinessesView: View {
                                 .foregroundColor(Color("priemary texts"))
                                 .padding(.top, 16)
 
-                            NavigationLink(destination: StartFromScratchView()) {
-                                HStack {
-                                    Text("+New Business")
-                                        .font(.system(size: 16, weight: .semibold))
-                                }
+                            Button(action: {
+                                showNewBusiness = true
+                            }) {
+                                Text("+New Business")
+                                    .font(.system(size: 16, weight: .semibold))
                             }
                             .buttonStyle(PrimaryAppButtonStyle())
                             .padding(.top, 8)
@@ -117,11 +118,11 @@ struct MyBusinessesView: View {
                                 BusinessCardView(item: item)
                             }
 
-                            NavigationLink(destination: StartFromScratchView()) {
-                                HStack {
-                                    Text("+ New Business")
-                                        .font(.system(size: 16, weight: .semibold))
-                                }
+                            Button(action: {
+                                showNewBusiness = true
+                            }) {
+                                Text("+ New Business")
+                                    .font(.system(size: 16, weight: .semibold))
                             }
                             .buttonStyle(PrimaryAppButtonStyle())
                             .padding(.top, 12)
@@ -133,6 +134,9 @@ struct MyBusinessesView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .fullScreenCover(isPresented: $showNewBusiness) {
+            StartFromScratchView()
+        }
     }
 }
 
