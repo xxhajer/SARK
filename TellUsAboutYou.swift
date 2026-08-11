@@ -1,12 +1,8 @@
-//
-//  TellUsAboutYou.swift
-//  SARK
-//
-
 import SwiftUI
 
 struct TellUsAboutYouView: View {
     @Environment(\.dismiss) private var dismiss
+    var onFinishCreation: (() -> Void)? = nil
     @State private var navigateToEvaluation = false
     
     // State Variables
@@ -94,7 +90,7 @@ struct TellUsAboutYouView: View {
         .background(Color("Background").ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .navigationDestination(isPresented: $navigateToEvaluation) {
-            IdeaEvaluationView()
+            IdeaEvaluationView(onFinishCreation: onFinishCreation)
         }
     }
 }
