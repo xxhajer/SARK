@@ -9,7 +9,6 @@ import SwiftUI
 
 struct NotificationsView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var selectedTab = 2
     @State private var dailyReminders = true
 
     var body: some View {
@@ -62,81 +61,85 @@ struct NotificationsView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 30)
 
-                // عنوان Recent
-                Text("Recent")
-                    .font(.system(size: 15, weight: .medium))
-                    .foregroundColor(.fadedText)
-                    .padding(.bottom, 15)
+                if dailyReminders {
+                    // عنوان Recent
+                    Text("Recent")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundColor(.fadedText)
+                        .padding(.bottom, 15)
 
-                // كروت الإشعارات
-                VStack(spacing: 14) {
+                    // كروت الإشعارات
+                    VStack(spacing: 14) {
 
-                    HStack(spacing: 12) {
-                        Text("🔥")
-                            .font(.system(size: 20))
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text("Keep your streak alive")
-                                .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(.black)
-                            Text("Today · Don't lose your 12-day streak")
-                                .font(.system(size: 13))
-                                .foregroundColor(.fadedText)
+                        HStack(spacing: 12) {
+                            Text("🔥")
+                                .font(.system(size: 20))
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text("Keep your streak alive")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(.black)
+                                Text("Today · Don't lose your 12-day streak")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(.fadedText)
+                            }
+                            Spacer()
                         }
-                        Spacer()
-                    }
-                    .padding(16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.white)
-                            .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 3)
-                    )
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color.white)
+                                .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 3)
+                        )
 
-                    HStack(spacing: 12) {
-                        Image(systemName: "chart.bar.doc.horizontal")
-                            .font(.system(size: 18))
-                            .foregroundColor(.greeen)
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text("Progress reminder")
-                                .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(.black)
-                            Text("yesterday · your project is one step closer")
-                                .font(.system(size: 13))
-                                .foregroundColor(.fadedText)
+                        HStack(spacing: 12) {
+                            Image(systemName: "chart.bar.doc.horizontal")
+                                .font(.system(size: 18))
+                                .foregroundColor(.greeen)
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text("Progress reminder")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(.black)
+                                Text("yesterday · your project is one step closer")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(.fadedText)
+                            }
+                            Spacer()
                         }
-                        Spacer()
-                    }
-                    .padding(16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.white)
-                            .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 3)
-                    )
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color.white)
+                                .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 3)
+                        )
 
-                    HStack(spacing: 12) {
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text("Check-in")
-                                .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(.black)
-                            Text("2days ago · Pick Up where you left off")
-                                .font(.system(size: 13))
-                                .foregroundColor(.fadedText)
+                        HStack(spacing: 12) {
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text("Check-in")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(.black)
+                                Text("2days ago · Pick Up where you left off")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(.fadedText)
+                            }
+                            Spacer()
                         }
-                        Spacer()
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color.white)
+                                .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 3)
+                        )
                     }
-                    .padding(16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.white)
-                            .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 3)
-                    )
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 100)
+                    .transition(.opacity)
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 100)
             }
-
-            CustomTabBar(selectedTab: $selectedTab)
-                .padding(.bottom, 10)
+            .animation(.easeInOut(duration: 0.25), value: dailyReminders)
         }
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
