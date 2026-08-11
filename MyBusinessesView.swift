@@ -1,214 +1,212 @@
 import SwiftUI
 
-// MARK: - 1. Business Data Model
-struct BusinessItem: Identifiable {
-    let id = UUID()
-    var name: String
-    var stage: String
-    var progress: Double
-    var iconName: String
-    var lastUpdated: String
-}
-
-// MARK: - 2. Main Screen View
-struct MyBusinessesView: View {
+// MARK: - SCREEN 2: IdeaEvaluationView (Standalone UI View)
+struct IdeaEvaluationView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var searchText: String = ""
-    @State private var showNewBusiness = false
+    var onFinishCreation: (() -> Void)? = nil
     
-    @State private var businesses: [BusinessItem] = []
+    // متغير للتحكم بفتح صفحة الـ Roadmap
+    @State private var navigateToRoadmap: Bool = false
     
-    var filteredBusinesses: [BusinessItem] {
-        if searchText.isEmpty {
-            return businesses
-        } else {
-            return businesses.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
-        }
-    }
+    // بيانات العرض الحالية (Dummy / Mock Data)
+    let overallScore: Int = 84
+    let scoreFeedback: String = "Great potential! keep going!"
+    let marketDemand: Int = 85
+    let feasibility: Int = 80
+    let competition: Int = 70
+    let riskLevel: Int = 40
+    
+    let strengths: [String] = [
+        "Strong market demand",
+        "Clear target audience",
+        "Good profit potential"
+    ]
+    
+    let weaknesses: [String] = [
+        "High initial competition",
+        "Requires good location",
+        "Marketing is critical"
+    ]
+    
+    let aiRecommendation: String = "Focus on unique offering and local marketing strategies to stand out from competitors."
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Color("Background")
-                .ignoresSafeArea()
-            
-            ScrollView(showsIndicators: false) {
-                // Header Bar
-                HStack {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "arrow.left")
-                            .font(.system(size: 20, weight: .regular))
-                            .foregroundColor(Color("priemary texts"))
-                    }
-                    Spacer()
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 16)
-                .padding(.bottom, 12)
-                
-                VStack(alignment: .leading, spacing: 18) {
-                    
-                    // Title Section
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("My Businesses")
-                            .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(Color("priemary texts"))
-
-                        Text("Manage and track all your ventures.")
-                            .font(.system(size: 15))
-                            .foregroundColor(Color("faded text"))
-                    }
-
-                    // Count Label
-                    Text("\(businesses.count) Active Businesses")
-                        .font(.system(size: 15, weight: .bold))
+        VStack(spacing: 0) {
+            // Top Navigation Bar
+            HStack {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "arrow.left")
+                        .font(.system(size: 20, weight: .regular))
                         .foregroundColor(Color("priemary texts"))
+                }
+                Spacer()
+                Text("Idea Evaluation")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(Color("priemary texts"))
+                Spacer()
+                Color.clear.frame(width: 20, height: 20)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 16)
+            .padding(.bottom, 12)
 
-                    // Search Bar
-                    HStack(spacing: 10) {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(Color("faded text"))
-                            .font(.system(size: 16))
-                        
-                        TextField("Search business..", text: $searchText)
-                            .font(.system(size: 15))
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 16) {
+                    
+                    // Overall Score Box
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Overall Score")
+                            .font(.system(size: 15, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
+
+                        HStack(alignment: .firstTextBaseline, spacing: 2) {
+                            Text("\(overallScore)")
+                                .font(.system(size: 48, weight: .bold))
+                                .foregroundColor(Color("appOrange"))
+
+                            Text("/100")
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(Color("priemary texts"))
+                        }
+
+                        Text(scoreFeedback)
+                            .font(.system(size: 13))
+                            .foregroundColor(Color("faded text"))
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(20)
                     .background(Color("boxes"))
-                    .cornerRadius(25)
-                    .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 3)
+                    .cornerRadius(16)
+                    .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 6)
 
-                    // CONDITION: Empty State vs Businesses List
-                    if businesses.isEmpty {
-                        
-                        VStack(spacing: 16) {
-                            Spacer().frame(height: 30)
-                            
-                            Text("You have no\nbusinesses")
-                                .font(.system(size: 24, weight: .bold))
+                    // Metrics Grid (4 Cards - Updated Unified Shadow)
+                    HStack(spacing: 10) {
+                        EvaluationMetricCard(title: "Market Demand", score: marketDemand)
+                        EvaluationMetricCard(title: "Feasibility", score: feasibility)
+                        EvaluationMetricCard(title: "Competition", score: competition)
+                        EvaluationMetricCard(title: "Risk Level", score: riskLevel)
+                    }
+
+                    // Strengths & Weaknesses
+                    HStack(alignment: .top, spacing: 12) {
+                        EvaluationAnalysisBox(title: "Strengths", items: strengths)
+                        EvaluationAnalysisBox(title: "Weaknesses", items: weaknesses)
+                    }
+
+                    // AI Recommendation Box
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            Text("AI Recommendation")
+                                .font(.system(size: 15, weight: .bold))
                                 .foregroundColor(Color("priemary texts"))
-                                .multilineTextAlignment(.center)
 
-                            Image("sad-fac")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 72, height: 72)
+                            Spacer()
 
-                            Text("Start your First!")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(Color("priemary texts"))
-                                .padding(.top, 16)
-
-                            Button(action: {
-                                showNewBusiness = true
-                            }) {
-                                Text("+New Business")
-                                    .font(.system(size: 16, weight: .semibold))
-                            }
-                            .buttonStyle(PrimaryAppButtonStyle())
-                            .padding(.top, 8)
+                            Image(systemName: "bubble.left.and.bubble.right")
+                                .font(.system(size: 16))
+                                .foregroundColor(Color("appOrange"))
                         }
-                        .frame(maxWidth: .infinity)
-                        
-                    } else {
-                        
-                        VStack(spacing: 16) {
-                            ForEach(filteredBusinesses) { item in
-                                BusinessCardView(item: item)
-                            }
 
-                            Button(action: {
-                                showNewBusiness = true
-                            }) {
-                                Text("+ New Business")
-                                    .font(.system(size: 16, weight: .semibold))
-                            }
-                            .buttonStyle(PrimaryAppButtonStyle())
-                            .padding(.top, 12)
+                        Text(aiRecommendation)
+                            .font(.system(size: 13))
+                            .foregroundColor(Color("faded text"))
+                            .lineSpacing(4)
+                    }
+                    .padding(16)
+                    .background(Color("boxes"))
+                    .cornerRadius(16)
+                    .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 6)
+
+                    // Action Button
+                    Button(action: {
+                        navigateToRoadmap = true
+                    }) {
+                        HStack(spacing: 8) {
+                            Text("Generate Roadmap")
+                                .font(.system(size: 16, weight: .semibold))
+
+                            Image(systemName: "arrow.right")
+                                .font(.system(size: 15, weight: .bold))
                         }
                     }
+                    .buttonStyle(PrimaryAppButtonStyle())
+                    .padding(.top, 8)
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 100)
+                .padding(.bottom, 24)
             }
         }
+        .background(Color("Background").ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
-        .fullScreenCover(isPresented: $showNewBusiness) {
-            StartFromScratchView()
+        // ربط الضغطة بالانتقال إلى RoadmapView
+        .navigationDestination(isPresented: $navigateToRoadmap) {
+            RoadmapView(onFinishCreation: onFinishCreation)
         }
     }
 }
 
-// MARK: - 3. Business Card Component
-private struct BusinessCardView: View {
-    let item: BusinessItem
+// MARK: - Private Helper Component: Metric Card (Fixed Shadow)
+private struct EvaluationMetricCard: View {
+    let title: String
+    let score: Int
 
     var body: some View {
-        NavigationLink(destination: IdeaEvaluationView()) {
-            HStack(spacing: 16) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color("appGreen"))
-                        .frame(width: 54, height: 54)
+        VStack(spacing: 12) {
+            Text(title)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(Color("priemary texts"))
+                .multilineTextAlignment(.center)
+                .frame(height: 28)
 
-                    Image(systemName: item.iconName)
-                        .font(.system(size: 24))
-                        .foregroundColor(.white)
-                }
+            Text("\(score)")
+                .font(.system(size: 20, weight: .bold))
+                .foregroundColor(Color("priemary texts"))
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 14)
+        .padding(.horizontal, 6)
+        .background(Color("boxes"))
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 6)
+    }
+}
 
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Text(item.name)
-                            .font(.system(size: 17, weight: .bold))
-                            .foregroundColor(Color("priemary texts"))
+// MARK: - Private Helper Component: Analysis Box
+private struct EvaluationAnalysisBox: View {
+    let title: String
+    let items: [String]
 
-                        Spacer()
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title)
+                .font(.system(size: 15, weight: .bold))
+                .foregroundColor(Color("priemary texts"))
 
-                        Image(systemName: "arrow.right")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(Color("priemary texts"))
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(items, id: \.self) { item in
+                    HStack(alignment: .top, spacing: 6) {
+                        Text("•")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(Color("faded text"))
+
+                        Text(item)
+                            .font(.system(size: 12))
+                            .foregroundColor(Color("faded text"))
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-
-                    Text(item.stage)
-                        .font(.system(size: 13))
-                        .foregroundColor(Color("faded text"))
-
-                    HStack(spacing: 8) {
-                        Text("\(Int(item.progress * 100))%")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(Color("priemary texts"))
-
-                        GeometryReader { geo in
-                            ZStack(alignment: .leading) {
-                                Capsule()
-                                    .fill(Color.gray.opacity(0.2))
-                                    .frame(height: 6)
-
-                                Capsule()
-                                    .fill(Color("appOrange"))
-                                    .frame(width: geo.size.width * CGFloat(item.progress), height: 6)
-                            }
-                        }
-                        .frame(height: 6)
-                    }
-
-                    Text(item.lastUpdated)
-                        .font(.system(size: 11))
-                        .foregroundColor(Color("faded text"))
                 }
             }
-            .padding(16)
-            .background(Color("boxes"))
-            .cornerRadius(20)
-            .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 6)
         }
-        .buttonStyle(PlainButtonStyle())
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color("boxes"))
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 6)
     }
 }
 
 #Preview {
     NavigationStack {
-        MyBusinessesView()
+        IdeaEvaluationView()
     }
 }
