@@ -10,7 +10,7 @@ import SwiftUI
 struct SplashView: View {
     @State private var isActive = false
     @State private var opacity = 0.0
-    @State private var scale = 0.8
+    @State private var scale = 0.98
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     
     var body: some View {
@@ -36,35 +36,25 @@ struct SplashView: View {
     // MARK: - Splash Content
     private var splashContent: some View {
         ZStack {
-            Color("Background")
+            // خلفية الشاشة بكروم اللون المطلوب #FFFCF8
+            Color(red: 255/255, green: 252/255, blue: 248/255)
                 .ignoresSafeArea()
             
-            VStack(spacing: 0) {
+            VStack {
                 Spacer()
                 
-                Image(systemName: "star")
-                    .font(.system(size: 60))
-                    .foregroundColor(Color("priemary texts"))
-                    .padding(.bottom, 40)
+                Image("splashPic")
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.horizontal, 16)
+                    .scaleEffect(scale)
+                    .opacity(opacity)
+                    .padding(.bottom, 35) // رفع الصورة قليلاً لتوسيط الشعار ونزول النجمة
                 
-                taglineText
-                
-                Spacer()
                 Spacer()
             }
-            .scaleEffect(scale)
-            .opacity(opacity)
         }
         .onAppear(perform: animateSplash)
-    }
-    
-    // MARK: - Tagline
-    private var taglineText: some View {
-        Text("\"An All-In-One Interactive Platform That Guides Aspiring Entrepreneurs From Idea To Execution.\"")
-            .font(.system(size: 16, weight: .regular))
-            .foregroundColor(Color("priemary texts"))
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 40)
     }
     
     // MARK: - Animation
