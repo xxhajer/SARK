@@ -1,5 +1,12 @@
 //
 //  HomeView.swift
+//  SARK
+//
+//  Created by hajer almejel on 27/02/1448 AH.
+//
+
+//
+//  HomeView.swift
 //  Sark
 //
 //  Created by ربى خالد الدوسري on 23/02/1448 AH.
@@ -182,4 +189,3 @@ struct BusinessCardView1: View {
 #Preview {
     HomeView()
 }
-
