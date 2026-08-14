@@ -1,0 +1,161 @@
+//
+//  tips.swift
+//  SARK
+//
+//  Created by hajer almejel on 27/02/1448 AH.
+//
+
+{
+  "tips": [
+    {
+      "id": 1,
+      "text": "Focus on solving a real\nproblem for your customers",
+      "category": "strategy"
+    },
+    {
+      "id": 2,
+      "text": "Start small and iterate\nbased on feedback",
+      "category": "execution"
+    },
+    {
+      "id": 3,
+      "text": "Build relationships with\nyour early customers",
+      "category": "relationships"
+    },
+    {
+      "id": 4,
+      "text": "Track your key metrics\nfrom day one",
+      "category": "analytics"
+    },
+    {
+      "id": 5,
+      "text": "Don't be afraid to\npivot when needed",
+      "category": "strategy"
+    },
+    {
+      "id": 6,
+      "text": "Invest time in understanding\nyour market",
+      "category": "research"
+    },
+    {
+      "id": 7,
+      "text": "Keep your operations\nlean and efficient",
+      "category": "operations"
+    },
+    {
+      "id": 8,
+      "text": "Listen more than you talk\nto your customers",
+      "category": "relationships"
+    },
+    {
+      "id": 9,
+      "text": "Your network is your\nnet worth",
+      "category": "networking"
+    },
+    {
+      "id": 10,
+      "text": "Consistency beats perfection\nwhen starting out",
+      "category": "execution"
+    },
+    {
+      "id": 11,
+      "text": "Test your ideas quickly\nbefore scaling",
+      "category": "validation"
+    },
+    {
+      "id": 12,
+      "text": "Focus on one thing\nand do it exceptionally well",
+      "category": "strategy"
+    },
+    {
+      "id": 13,
+      "text": "Your brand is what people\nsay when you're not there",
+      "category": "branding"
+    },
+    {
+      "id": 14,
+      "text": "Cash flow is king\nin any business",
+      "category": "finance"
+    },
+    {
+      "id": 15,
+      "text": "Automate repetitive tasks\nto save time",
+      "category": "productivity"
+    },
+    {
+      "id": 16,
+      "text": "Set clear goals and\nmeasure progress weekly",
+      "category": "planning"
+    },
+    {
+      "id": 17,
+      "text": "Learn from failures\nfaster than competitors",
+      "category": "growth"
+    },
+    {
+      "id": 18,
+      "text": "Invest in yourself\nbefore hiring others",
+      "category": "personal-growth"
+    },
+    {
+      "id": 19,
+      "text": "Customer retention is cheaper\nthan acquisition",
+      "category": "marketing"
+    },
+    {
+      "id": 20,
+      "text": "Document your processes\nfor future scaling",
+      "category": "operations"
+    },
+    {
+      "id": 21,
+      "text": "Build a community\naround your product",
+      "category": "community"
+    },
+    {
+      "id": 22,
+      "text": "Price based on value\nnot just costs",
+      "category": "pricing"
+    },
+    {
+      "id": 23,
+      "text": "Celebrate small wins\nalong the journey",
+      "category": "mindset"
+    },
+    {
+      "id": 24,
+      "text": "Stay curious and keep\nlearning every day",
+      "category": "personal-growth"
+    },
+    {
+      "id": 25,
+      "text": "Your customers are your\nbest marketers",
+      "category": "marketing"
+    },
+    {
+      "id": 26,
+      "text": "Balance innovation with\nwhat already works",
+      "category": "strategy"
+    },
+    {
+      "id": 27,
+      "text": "Time management is really\nenergy management",
+      "category": "productivity"
+    },
+    {
+      "id": 28,
+      "text": "Build systems that work\nwithout you",
+      "category": "operations"
+    },
+    {
+      "id": 29,
+      "text": "Focus on progress\nnot perfection",
+      "category": "mindset"
+    },
+    {
+      "id": 30,
+      "text": "Your team is your\ngreatest asset",
+      "category": "team"
+    }
+  ]
+}

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		30C6CDE63021D138003563F2 /* SARK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SARK.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		30C6CE6330285087003563F2 /* SARK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SARK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,16 +33,8 @@
 			isa = PBXGroup;
 			children = (
 				30C6CDE83021D138003563F2 /* SARK */,
-				30C6CDE73021D138003563F2 /* Products */,
+				30C6CE6330285087003563F2 /* SARK.app */,
 			);
-			sourceTree = "<group>";
-		};
-		30C6CDE73021D138003563F2 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				30C6CDE63021D138003563F2 /* SARK.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -67,7 +59,7 @@
 			packageProductDependencies = (
 			);
 			productName = SARK;
-			productReference = 30C6CDE63021D138003563F2 /* SARK.app */;
+			productReference = 30C6CE6330285087003563F2 /* SARK.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -95,7 +87,7 @@
 			mainGroup = 30C6CDDD3021D138003563F2;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 30C6CDE73021D138003563F2 /* Products */;
+			productRefGroup = 30C6CDDD3021D138003563F2;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

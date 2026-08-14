@@ -1,0 +1,8 @@
+# Xcode
+xcuserdata/
+*.xcuserstate
+.DS_Store
+DerivedData/
+
+# API keys / secrets - never commit these
+SARK/Secrets.swift

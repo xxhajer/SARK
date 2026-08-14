@@ -1,0 +1,35 @@
+//
+//  ُشزؤهرع.swift
+//  SARK
+//
+//  Created by hajer almejel on 26/02/1448 AH.
+//
+import SwiftUI
+
+struct MainTabView: View {
+    @State private var selectedTab = 0
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+
+            // المحتوى يتغير حسب التاب المختار
+            // CHANGE: شالت المنتورة تاب البروفايل كامل — بقي بس Home و Projects.
+            Group {
+                switch selectedTab {
+                case 0:
+                    HomeView()
+                default:
+                    MyBusinessesView()
+                }
+            }
+
+            // التاب بار ثابت فوق كل شي، مرة وحدة بس
+            CustomTabBar(selectedTab: $selectedTab)
+                .padding(.bottom, 10)
+        }
+    }
+}
+
+#Preview {
+    MainTabView()
+}
