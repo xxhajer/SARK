@@ -78,13 +78,6 @@ struct projectDashBoard: View {
                                         .font(.system(size:0))
                                 )
 
-                            // CHANGE: ما نقص النص بثلاث نقاط تلقائية بعد الآن
-                            // (كانت توهم إن فيه كلام ناقص بدون ما توضح وينه) —
-                            // الحين النص يبين كامل لو يناسب، ولو طويل فعلاً
-                            // يطلع زر "More" صريح يفتحه كامل.
-                            // CHANGE: الخطوط كانت كبيرة وغير متناسقة (18 للعنوان
-                            // مقابل تسميات 16) — صغرناها وخلينا التسمية والعنوان
-                            // بحجم متقارب عشان يريح العين ويبين موحّد.
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Current Stage")
                                     .foregroundColor(.fadedText)
@@ -98,9 +91,6 @@ struct projectDashBoard: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
 
-                            // CHANGE: "Overall Progress" والرقم كانوا مره كبار
-                            // (35pt) مقارنة ببقية الكرت — صغرناهم عشان يتناسقوا
-                            // مع باقي التصميم بدل ما يوجعوا العين.
                             VStack(alignment: .trailing, spacing: 10) {
                                 Text("Overall Progress")
                                     .foregroundColor(.black)
@@ -157,8 +147,8 @@ struct projectDashBoard: View {
                     .padding(25)
                     .background(
                         RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.greeen)
-                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                            .fill(Color.greeen)
+                            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                     )
                     .frame(width: 380)
                     .padding(.bottom, 30)
@@ -209,90 +199,92 @@ struct projectDashBoard: View {
                             RoundedRectangle(cornerRadius: 20)
                                 .fill(Color.white)
                                 .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
-                                .frame(width: 150, height: 160)
                         )
+                        .frame(width: 150, height: 160)
                     }
                     .padding(.bottom, 25)
-                    VStack(spacing:10){
+
+                    // Quick Actions Section مع محاذاة موحدة
+                    VStack(alignment: .leading, spacing: 12) {
                         Text("Quick Actions")
                             .font(.system(size: 20, weight: .bold))
                             .foregroundColor(.black)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading,15)
-                            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
 
                         HStack(spacing: 12) {
-                            HStack(spacing: 0) {
-
-                                NavigationLink(destination: IdeaEvaluationView(businessID: businessID)) {
-                                    VStack(spacing: 10) {
-                                        RoundedRectangle(cornerRadius: 18)
-                                            .fill(Color.white)
-                                            .frame(width: 120, height: 90)
-                                            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
-                                            .overlay(
-                                                Image("ideaEva")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(width: 40, height: 40)
-                                            )
-                                        Text("Idea Evaluation")
-                                            .font(.system(size: 16, weight: .semibold))
-                                            .foregroundColor(.black)
-                                    }
-                                    .frame(maxWidth: .infinity)
+                            NavigationLink(destination: IdeaEvaluationView(businessID: businessID)) {
+                                VStack(spacing: 10) {
+                                    RoundedRectangle(cornerRadius: 18)
+                                        .fill(Color.white)
+                                        .frame(height: 90)
+                                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                                        .overlay(
+                                            Image("ideaEva")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 40, height: 40)
+                                        )
+                                    Text("Idea Evaluation")
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundColor(.black)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.75)
                                 }
-                                .buttonStyle(PlainButtonStyle())
-
-                                NavigationLink(destination: BudgetOverviewView(businessID: businessID)) {
-                                    VStack(spacing: 10) {
-                                        RoundedRectangle(cornerRadius: 18)
-                                            .fill(Color.white)
-                                            .frame(width: 120, height: 90)
-                                            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
-                                            .overlay(
-                                                Image("Wallet")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(width: 40, height: 40)
-                                            )
-                                        Text("Budget")
-                                            .font(.system(size: 16, weight: .semibold))
-                                            .foregroundColor(.black)
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                }
-                                .buttonStyle(PlainButtonStyle())
-
-
-                                NavigationLink(destination: RoadmapView(businessID: businessID)) {
-                                    VStack(spacing: 10) {
-                                        RoundedRectangle(cornerRadius: 18)
-                                            .fill(Color.white)
-                                            .frame(width: 120, height: 90)
-                                            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
-                                            .overlay(
-                                                Image("Roadmap")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(width: 40, height: 40)
-                                            )
-                                        Text("Roadmap")
-                                            .font(.system(size: 16, weight: .semibold))
-                                            .foregroundColor(.black)
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                }
-                                .buttonStyle(PlainButtonStyle())
+                                .frame(maxWidth: .infinity)
                             }
+                            .buttonStyle(PlainButtonStyle())
+
+                            NavigationLink(destination: BudgetOverviewView(businessID: businessID)) {
+                                VStack(spacing: 10) {
+                                    RoundedRectangle(cornerRadius: 18)
+                                        .fill(Color.white)
+                                        .frame(height: 90)
+                                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                                        .overlay(
+                                            Image("Wallet")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 40, height: 40)
+                                        )
+                                    Text("Budget")
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundColor(.black)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+
+                            NavigationLink(destination: RoadmapView(businessID: businessID)) {
+                                VStack(spacing: 10) {
+                                    RoundedRectangle(cornerRadius: 18)
+                                        .fill(Color.white)
+                                        .frame(height: 90)
+                                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                                        .overlay(
+                                            Image("Roadmap")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 40, height: 40)
+                                        )
+                                    Text("Roadmap")
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundColor(.black)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
+
                         Rectangle()
                             .fill(Color.insideTheGreen)
                             .frame(height: 1)
-                            .padding(.horizontal, 15)
                             .padding(.top, 10)
                             .shadow(color: Color.insideTheGreen, radius: 8, x: 0, y: 8)
                     }
+                    .padding(.horizontal, 20)
                 }
                 .padding(.bottom, 100)
             }
