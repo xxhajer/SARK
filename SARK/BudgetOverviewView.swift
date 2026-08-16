@@ -24,8 +24,10 @@ struct BudgetOverviewView: View {
         return store.businesses[idx]
     }
 
+    // CHANGE: كانت تعرض آخر 4 مصاريف بالبيت اوفرفيو، صار مزدحم بالشاشة —
+    // اليوزر طلب يبين بس 2 هنا (والباقي يشوفه من "View All").
     private var recentExpenses: [Expense] {
-        Array((business?.expenses ?? []).suffix(4).reversed())
+        Array((business?.expenses ?? []).suffix(2).reversed())
     }
 
     var body: some View {
@@ -238,9 +240,11 @@ struct BudgetOverviewView: View {
                                                     Text(expense.title)
                                                         .font(.system(size: 14, weight: .semibold))
                                                         .foregroundColor(Color("priemary text"))
+                                                        .multilineTextAlignment(.leading)
                                                     Text(expense.date)
                                                         .font(.system(size: 12))
                                                         .foregroundColor(Color("faded text"))
+                                                        .multilineTextAlignment(.leading)
                                                 }
                                                 Spacer()
                                                 Text(expense.amountFormatted)
