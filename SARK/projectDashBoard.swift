@@ -37,45 +37,43 @@ struct projectDashBoard: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottom){
+        ZStack(alignment: .bottom) {
             Color("Background")
                 .ignoresSafeArea()
 
-            ScrollView {
-                VStack(alignment: .center, spacing: 0) {
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 20) {
 
-                    HStack(spacing: 35) {
-
+                    // Header
+                    HStack {
                         Button(action: {
                             dismiss()
                         }) {
                             Image(systemName: "arrow.left")
-                                .font(.system(size: 25, weight: .semibold))
+                                .font(.system(size: 22, weight: .semibold))
                                 .foregroundColor(.black)
                         }
 
                         Text(business?.name ?? "My Business")
-                            .font(.system(size: 24, weight: .bold))
+                            .font(.system(size: 22, weight: .bold))
                             .foregroundColor(.black)
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
 
                         Spacer()
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 10)
-                    .padding(.bottom, 30)
+                    .padding(.top, 16)
+                    .padding(.bottom, 8)
 
-                    VStack(alignment: .leading, spacing: 20) {
-                        HStack {
-
+                    // Card 1: Current Stage & Progress
+                    VStack(alignment: .leading, spacing: 18) {
+                        HStack(alignment: .center) {
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(Color.greeen)
-                                .frame(width: 55, height: 65)
+                                .frame(width: 55, height: 60)
                                 .overlay(
                                     Image("document")
                                         .foregroundColor(.white)
-                                        .font(.system(size:0))
                                 )
 
                             VStack(alignment: .leading, spacing: 6) {
@@ -91,7 +89,7 @@ struct projectDashBoard: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
 
-                            VStack(alignment: .trailing, spacing: 10) {
+                            VStack(alignment: .trailing, spacing: 6) {
                                 Text("Overall Progress")
                                     .foregroundColor(.black)
                                     .font(.system(size: 13, weight: .semibold))
@@ -99,7 +97,7 @@ struct projectDashBoard: View {
                                     .minimumScaleFactor(0.6)
                                 Text("\(progressPercent)%")
                                     .foregroundColor(.black)
-                                    .font(.system(size: 24, weight: .bold))
+                                    .font(.system(size: 26, weight: .bold))
                             }
                             .layoutPriority(1)
                         }
@@ -115,28 +113,28 @@ struct projectDashBoard: View {
                                     .animation(.easeInOut(duration: 0.3), value: progressPercent)
                             }
                         }
-                        .frame(height: 1)
+                        .frame(height: 8)
                     }
-                    .padding(25)
+                    .padding(20)
+                    .frame(maxWidth: .infinity)
                     .background(
                         RoundedRectangle(cornerRadius: 20)
                             .fill(Color.white)
-                            .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 4)
+                            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                     )
-                    .frame(width: 380)
-                    .padding(.bottom, 25)
 
-                    HStack(alignment: .top, spacing: 20) {
+                    // Card 2: Today's Goal
+                    HStack(alignment: .top, spacing: 16) {
                         Image("goal")
 
-                        VStack(alignment: .leading, spacing: 10) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text("Today's Goal")
                                 .foregroundColor(.insideTheGreen)
-                                .font(.system(size: 18, weight: .medium))
+                                .font(.system(size: 16, weight: .medium))
                             ExpandableText(
                                 text: todaysGoalTitle,
                                 collapsedLimit: 70,
-                                font: .system(size: 17, weight: .bold),
+                                font: .system(size: 16, weight: .bold),
                                 color: Color("inside the green"),
                                 linkColor: .white
                             )
@@ -144,87 +142,96 @@ struct projectDashBoard: View {
 
                         Spacer()
                     }
-                    .padding(25)
+                    .padding(20)
+                    .frame(maxWidth: .infinity)
                     .background(
                         RoundedRectangle(cornerRadius: 20)
                             .fill(Color.greeen)
                             .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                     )
-                    .frame(width: 380)
-                    .padding(.bottom, 30)
 
-                    HStack(alignment: .top, spacing: 5) {
-
-                        VStack(alignment: .leading, spacing: 13) {
+                    // Row: Next Milestone & Business Health
+                    HStack(alignment: .top, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 10) {
                             Text("Next Milestone")
-                                .font(.system(size: 18, weight: .bold))
+                                .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(.black)
 
                             ExpandableText(
                                 text: nextMilestoneTitle,
-                                collapsedLimit: 45,
-                                font: .system(size: 16, weight: .bold),
+                                collapsedLimit: 40,
+                                font: .system(size: 15, weight: .bold),
                                 color: .black
                             )
 
-                            HStack(spacing: 5) {
+                            Spacer(minLength: 8)
+
+                            HStack(spacing: 6) {
                                 Image(systemName: "calendar")
                                     .foregroundColor(.fadedText)
-                                    .font(.system(size: 13))
+                                    .font(.system(size: 14))
                                 Text(business?.timeline.isEmpty == false ? business!.timeline : "—")
-                                    .font(.system(size: 12, weight: .regular))
+                                    .font(.system(size: 13, weight: .regular))
                                     .foregroundColor(.fadedText)
                                     .lineLimit(1)
                             }
                         }
-                        .padding(20)
+                        .padding(18)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .frame(height: 145)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
                                 .fill(Color.white)
                                 .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                         )
-                        .frame(width: 200)
 
-                        VStack(spacing: 10) {
+                        // Business Health Box
+                        VStack(spacing: 12) {
                             Text("Business Health")
-                                .font(.system(size: 16, weight: .bold))
+                                .font(.system(size: 14, weight: .bold))
                                 .foregroundColor(.black)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+
                             Image("smileFace")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 44, height: 44)
+
                             Text("Good")
-                                .font(.system(size: 16, weight: .bold))
+                                .font(.system(size: 15, weight: .bold))
                                 .foregroundColor(.black)
                         }
-                        .padding(20)
+                        .frame(width: 130, height: 145)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
                                 .fill(Color.white)
                                 .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                         )
-                        .frame(width: 150, height: 160)
                     }
-                    .padding(.bottom, 25)
+                    .frame(maxWidth: .infinity)
 
-                    // Quick Actions Section مع محاذاة موحدة
-                    VStack(alignment: .leading, spacing: 12) {
+                    // Quick Actions Section
+                    VStack(alignment: .leading, spacing: 14) {
                         Text("Quick Actions")
-                            .font(.system(size: 20, weight: .bold))
+                            .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.black)
 
                         HStack(spacing: 12) {
                             NavigationLink(destination: IdeaEvaluationView(businessID: businessID)) {
-                                VStack(spacing: 10) {
+                                VStack(spacing: 8) {
                                     RoundedRectangle(cornerRadius: 18)
                                         .fill(Color.white)
-                                        .frame(height: 90)
-                                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                                        .frame(height: 88)
+                                        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
                                         .overlay(
                                             Image("ideaEva")
                                                 .resizable()
                                                 .scaledToFit()
-                                                .frame(width: 40, height: 40)
+                                                .frame(width: 36, height: 36)
                                         )
                                     Text("Idea Evaluation")
-                                        .font(.system(size: 14, weight: .semibold))
+                                        .font(.system(size: 12, weight: .semibold))
                                         .foregroundColor(.black)
                                         .lineLimit(1)
                                         .minimumScaleFactor(0.75)
@@ -234,19 +241,19 @@ struct projectDashBoard: View {
                             .buttonStyle(PlainButtonStyle())
 
                             NavigationLink(destination: BudgetOverviewView(businessID: businessID)) {
-                                VStack(spacing: 10) {
+                                VStack(spacing: 8) {
                                     RoundedRectangle(cornerRadius: 18)
                                         .fill(Color.white)
-                                        .frame(height: 90)
-                                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                                        .frame(height: 88)
+                                        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
                                         .overlay(
                                             Image("Wallet")
                                                 .resizable()
                                                 .scaledToFit()
-                                                .frame(width: 40, height: 40)
+                                                .frame(width: 36, height: 36)
                                         )
                                     Text("Budget")
-                                        .font(.system(size: 14, weight: .semibold))
+                                        .font(.system(size: 12, weight: .semibold))
                                         .foregroundColor(.black)
                                         .lineLimit(1)
                                         .minimumScaleFactor(0.8)
@@ -256,19 +263,19 @@ struct projectDashBoard: View {
                             .buttonStyle(PlainButtonStyle())
 
                             NavigationLink(destination: RoadmapView(businessID: businessID)) {
-                                VStack(spacing: 10) {
+                                VStack(spacing: 8) {
                                     RoundedRectangle(cornerRadius: 18)
                                         .fill(Color.white)
-                                        .frame(height: 90)
-                                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                                        .frame(height: 88)
+                                        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
                                         .overlay(
                                             Image("Roadmap")
                                                 .resizable()
                                                 .scaledToFit()
-                                                .frame(width: 40, height: 40)
+                                                .frame(width: 36, height: 36)
                                         )
                                     Text("Roadmap")
-                                        .font(.system(size: 14, weight: .semibold))
+                                        .font(.system(size: 12, weight: .semibold))
                                         .foregroundColor(.black)
                                         .lineLimit(1)
                                         .minimumScaleFactor(0.8)
@@ -281,12 +288,13 @@ struct projectDashBoard: View {
                         Rectangle()
                             .fill(Color.insideTheGreen)
                             .frame(height: 1)
-                            .padding(.top, 10)
-                            .shadow(color: Color.insideTheGreen, radius: 8, x: 0, y: 8)
+                            .padding(.top, 6)
+                            .shadow(color: Color.insideTheGreen.opacity(0.3), radius: 4, x: 0, y: 2)
                     }
-                    .padding(.horizontal, 20)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(.bottom, 100)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 40)
             }
         }
         .navigationBarHidden(true)
