@@ -331,6 +331,8 @@ enum GeminiService {
 
         Create between 4 and 8 realistic starting expenses a founder in this industry would actually need, with amounts that together add up to totalBudget.
 
+        CRITICAL — ONE THING PER EXPENSE: Each expense must be a SINGLE, atomic, distinct cost item with its own short, specific title (e.g. "Shop Rent Deposit", "POS System", "3-Month Staff Visas"). NEVER bundle multiple unrelated costs into one expense with a combined title like "Rent, Marketing & Staff Visas" or "Branding, POS Hardware & Pre-Launch Marketing" — split each of those into its own separate expense entry instead, even if that means going slightly above 8 items. A human reading the title should immediately know it's exactly one thing, not a list.
+
         CRITICAL: Do not artificially shrink totalBudget or the expenses to fit inside the founder's stated budget range just to make it look feasible. Estimate the real cost first, from the actual idea, location, and the market data below. Only after that, compare it honestly against what the founder said they have — and flag it via isBudgetSufficient/feasibilityNote if there's a real gap, exactly like how a careful human advisor would never pretend an unrealistic budget is fine.
 
         IMPORTANT: "totalBudget" and every "amount" MUST be plain numbers (e.g. 5000), never text, never with "SAR", currency symbols, or thousands separators — even though the real market data below is shown with "SAR" for readability, do not copy that formatting into the numeric fields.
