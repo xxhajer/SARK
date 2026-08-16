@@ -130,34 +130,6 @@ struct AllExpensesView: View {
                             }
                             .foregroundColor(Color("priemary text"))
                         }
-
-                        Divider()
-
-                        HStack(spacing: 0) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Categories")
-                                    .font(.system(size: 13, weight: .medium))
-                                    .foregroundColor(Color("faded text"))
-                                Text("\(categoryCount)")
-                                    .font(.system(size: 15, weight: .bold))
-                                    .foregroundColor(Color("priemary text"))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-
-                            Divider()
-                                .frame(height: 30)
-
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Transactions")
-                                    .font(.system(size: 13, weight: .medium))
-                                    .foregroundColor(Color("faded text"))
-                                Text("\(allExpenses.count)")
-                                    .font(.system(size: 15, weight: .bold))
-                                    .foregroundColor(Color("priemary text"))
-                            }
-                            .padding(.leading, 12)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        }
                     }
                     .padding(20)
                     .background(Color("boxes"))
@@ -185,9 +157,11 @@ struct AllExpensesView: View {
                                             Text(expense.title)
                                                 .font(.system(size: 14, weight: .semibold))
                                                 .foregroundColor(Color("priemary text"))
+                                                .multilineTextAlignment(.leading)
                                             Text(expense.date)
                                                 .font(.system(size: 12))
                                                 .foregroundColor(Color("faded text"))
+                                                .multilineTextAlignment(.leading)
                                         }
 
                                         Spacer()
