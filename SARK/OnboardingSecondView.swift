@@ -115,12 +115,11 @@ struct OnboardingSecondView: View {
                 navigateToHome = true
             }) {
                 HStack(spacing: 8) {
-                    Text("Next")
+                    Text("Start!")
                         .font(.custom("SF Pro", size: 20))
                         .fontWeight(.bold)
                     
-                    Image(systemName: "arrow.right.circle")
-                        .font(.system(size: 20, weight: .bold))
+                   
                 }
                 .foregroundColor(Color("inside the green"))
                 .frame(maxWidth: .infinity)
