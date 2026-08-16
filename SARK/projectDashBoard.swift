@@ -130,7 +130,7 @@ struct projectDashBoard: View {
                             .fill(Color.white)
                             .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 4)
                     )
-                    .frame(width: 380)
+                    .padding(.horizontal, 20)
                     .padding(.bottom, 25)
 
                     HStack(alignment: .top, spacing: 20) {
@@ -154,13 +154,13 @@ struct projectDashBoard: View {
                     .padding(25)
                     .background(
                         RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.greeen)
-                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                            .fill(Color.greeen)
+                            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                     )
-                    .frame(width: 380)
+                    .padding(.horizontal, 20)
                     .padding(.bottom, 30)
 
-                    HStack(alignment: .top, spacing: 5) {
+                    HStack(alignment: .top, spacing: 12) {
 
                         VStack(alignment: .leading, spacing: 13) {
                             Text("Next Milestone")
@@ -174,6 +174,8 @@ struct projectDashBoard: View {
                                 color: .black
                             )
 
+                            Spacer(minLength: 8)
+
                             HStack(spacing: 6) {
                                 Image(systemName: "calendar")
                                     .foregroundColor(.fadedText)
@@ -185,12 +187,12 @@ struct projectDashBoard: View {
                             }
                         }
                         .padding(20)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
                                 .fill(Color.white)
                                 .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                         )
-                        .frame(width: 200)
 
                         VStack(spacing: 10) {
                             Text("Business Health")
@@ -202,20 +204,22 @@ struct projectDashBoard: View {
                                 .foregroundColor(.black)
                         }
                         .padding(20)
+                        .frame(width: 140)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
                                 .fill(Color.white)
                                 .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
-                                .frame(width: 150, height: 160)
                         )
                     }
+                    .padding(.horizontal, 20)
                     .padding(.bottom, 25)
+
                     VStack(spacing:10){
                         Text("Quick Actions")
                             .font(.system(size: 20, weight: .bold))
                             .foregroundColor(.black)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading,15)
+                            .padding(.leading, 20)
                             .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
 
                         HStack(spacing: 12) {
@@ -225,7 +229,7 @@ struct projectDashBoard: View {
                                     VStack(spacing: 10) {
                                         RoundedRectangle(cornerRadius: 18)
                                             .fill(Color.white)
-                                            .frame(width: 120, height: 90)
+                                            .frame(height: 90)
                                             .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                                             .overlay(
                                                 Image("ideaEva")
@@ -242,7 +246,7 @@ struct projectDashBoard: View {
                                     VStack(spacing: 10) {
                                         RoundedRectangle(cornerRadius: 18)
                                             .fill(Color.white)
-                                            .frame(width: 120, height: 90)
+                                            .frame(height: 90)
                                             .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                                             .overlay(
                                                 Image("Wallet")
@@ -255,12 +259,11 @@ struct projectDashBoard: View {
                                 }
                                 .buttonStyle(PlainButtonStyle())
 
-
                                 NavigationLink(destination: RoadmapView(businessID: businessID)) {
                                     VStack(spacing: 10) {
                                         RoundedRectangle(cornerRadius: 18)
                                             .fill(Color.white)
-                                            .frame(width: 120, height: 90)
+                                            .frame(height: 90)
                                             .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
                                             .overlay(
                                                 Image("Roadmap")
@@ -274,10 +277,12 @@ struct projectDashBoard: View {
                                 .buttonStyle(PlainButtonStyle())
                             }
                         }
+                        .padding(.horizontal, 20)
+
                         Rectangle()
                             .fill(Color.insideTheGreen)
                             .frame(height: 1)
-                            .padding(.horizontal, 15)
+                            .padding(.horizontal, 20)
                             .padding(.top, 10)
                             .shadow(color: Color.insideTheGreen, radius: 8, x: 0, y: 8)
                     }
