@@ -1,0 +1,267 @@
+import SwiftUI
+
+struct profile: View {
+    @State private var showEditProfile = false
+    @State private var showNotifications = false
+    @State private var profileImageData: Data? = nil
+    @State private var showDeleteAlert = false
+    @ObservedObject private var store = BusinessStore.shared
+    @ObservedObject private var streak = StreakManager.shared
+
+    @State private var userName: String = UserDefaults.standard.string(forKey: "userName") ?? "Leena"
+    // CHANGE: كان دايمًا يبدأ فاضي حتى لو محفوظ، لأن تاب البروفايل ينبني من
+    // جديد كل مرة تتنقلين له (نفس سبب اليوزرنيم قبل)، فلازم يقرأ من
+    // UserDefaults زي بالضبط اليوزرنيم عشان الحفظ يضل فعلي.
+    @State private var userEmail: String = UserDefaults.standard.string(forKey: "userEmail") ?? ""
+
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+
+    var body: some View {
+        ZStack(alignment: .bottom){
+            Color("Background")
+                .ignoresSafeArea()
+
+            ScrollView() {
+                // صف الهيدر
+                ZStack() {
+                    Text("Profile")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundColor(.black)
+                        .frame(maxWidth: .infinity, alignment: .center)
+
+                    HStack {
+                        Button(action: {
+                            showNotifications = true
+                        }) {
+                            Image(systemName: "bell.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(.black)
+                                .frame(width: 44, height: 44)
+                                .background(Circle().fill(Color.white).shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 3))
+                                .overlay(
+                                    Circle()
+                                        .fill(Color.red)
+                                        .frame(width: 10, height: 9)
+                                        .offset(x: 13, y: -13)
+                                )
+                        }
+                        Spacer()
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+                .padding(.bottom, 20)
+
+                // كرت البروفايل
+                VStack(spacing: 13) {
+                    Group {
+                        if let data = profileImageData, let uiImage = UIImage(data: data) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFill()
+                        } else {
+                            Image("profilePic")
+                                .resizable()
+                                .scaledToFill()
+                        }
+                    }
+                    .frame(width: 100, height: 100)
+                    .clipShape(Circle())
+
+                    Text(userName)
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(.black)
+
+                    Text(userEmail.isEmpty ? "enter your email" : userEmail)
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundColor(userEmail.isEmpty ? .fadedText : .black)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 25)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.white)
+                        .frame(width: 380, height: 220)
+                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                )
+                .overlay(
+                    Button(action: {
+                        showEditProfile = true
+                    }) {
+                        Image(systemName: "pencil")
+                            .font(.system(size: 24))
+                            .foregroundColor(.greeen)
+                            .frame(width: 45, height: 45)
+                            .background(
+                                Circle()
+                                    .fill(Color.background)
+                                    .frame(width: 50, height: 50)
+                                    .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+                            )
+                    }
+                    .padding(.leading, 30)
+                    .padding(.bottom, 25),
+                    alignment: .bottomLeading
+                )
+                .padding(.bottom, 15)
+
+                // خط فاصل رمادي
+                Rectangle()
+                    .fill(Color.fadedText.opacity(0.4))
+                    .frame(height: 1)
+                    .padding(.horizontal, 20)
+                    .shadow(color: Color.fadedText.opacity(0.2), radius: 80, x: 80, y: 80)
+                    .padding(.bottom, 10)
+
+                // صف الإحصائيات
+                HStack(spacing: 16) {
+                    VStack(spacing: 8) {
+                        Text("Businesses")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.insideTheGreen)
+                        // CHANGE: يعرض الآن العدد الحقيقي من BusinessStore بدل رقم ثابت
+                        Text("\(store.businesses.count)")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(.insideTheGreen)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.greeen)
+                    )
+
+                    VStack(spacing: 8) {
+                        Text("Current Streak")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.insideTheGreen)
+                        HStack(spacing: 4) {
+                            // CHANGE: يعرض الستريك الحقيقي الآن — يزيد يوم بعد
+                            // يوم بس إذا خلّصتي تاسك (objective) بالرود ماب،
+                            // ويرجع صفر لو فاتك يوم كامل بدون ما تخلّصين شي.
+                            Text("\(streak.currentStreak)")
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundColor(.insideTheGreen)
+                            Text("🔥")
+                                .font(.system(size: 24))
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.greeen)
+                    )
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 15)
+
+                // عنوان Upcoming Features
+                Text("Upcoming Features")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.fadedText)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.bottom, 10)
+
+                // كرت Premium Membership
+                VStack(alignment: .leading, spacing: 10) {
+
+                    Text("Premium Membership ✨")
+                        .font(.system(size: 19, weight: .bold))
+                        .foregroundColor(.orangee)
+
+                    Text("These features are in the works - join the waitlist to get early access")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.fadedText)
+                        .multilineTextAlignment(.leading)
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(.greeen)
+                            Text("Personalized AI Coaching")
+                                .font(.system(size: 15))
+                                .foregroundColor(.black)
+                        }
+                        HStack(spacing: 8) {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(.greeen)
+                            Text("Deeper Business Research")
+                                .font(.system(size: 15))
+                                .foregroundColor(.black)
+                        }
+                        HStack(spacing: 8) {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(.greeen)
+                            Text("Unlimited Coaching Conversations")
+                                .font(.system(size: 15))
+                                .foregroundColor(.black)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(18)
+                .background(
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(Color.white)
+                        .frame(width: 380, height: 190)
+                        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                )
+                .padding(.bottom, 20)
+
+                // زر حذف الحساب
+                Button(action: {
+                    showDeleteAlert = true
+                }) {
+                    Text("Delete Your Account")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.red)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color.red, lineWidth: 1)
+                        )
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 100)
+            }
+        }
+        .sheet(isPresented: $showEditProfile) {
+            EditProfileView(userName: $userName, userEmail: $userEmail, profileImageData: $profileImageData)
+        }
+        .fullScreenCover(isPresented: $showNotifications) {
+            NotificationsView()
+        }
+        .alert("Delete Your Account", isPresented: $showDeleteAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                deleteAccount()
+            }
+        } message: {
+            Text("This will erase your name and all your businesses, and take you back to the beginning. Are you sure?")
+        }
+        .onAppear {
+            // يتأكد إن الستريك ينكسر إذا فاتك يوم كامل، حتى لو ما رجعتي هنا
+            // إلا بعد كذا يوم من آخر مرة خلّصتي فيها تاسك.
+            streak.refreshBrokenStreak()
+        }
+    }
+
+    // MARK: - Delete Account
+    private func deleteAccount() {
+        UserDefaults.standard.removeObject(forKey: "userName")
+        UserDefaults.standard.removeObject(forKey: "userEmail")
+        streak.reset()
+        // CHANGE: مسح كل البزنسات المخزنة أيضًا حتى يكون الحذف كامل فعلاً
+        store.removeAll()
+        hasCompletedOnboarding = false
+    }
+}
+
+#Preview {
+    profile()
+}

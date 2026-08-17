@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "lsicon_equipment-filled.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "lsicon_equipment-filled.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },

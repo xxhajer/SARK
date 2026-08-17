@@ -215,67 +215,86 @@ private struct BusinessCardView: View {
     let item: Business
 
     var body: some View {
-        NavigationLink(destination: projectDashBoard(businessID: item.id)) {
-            HStack(spacing: 16) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color("appGreen"))
-                        .frame(width: 54, height: 54)
-
-                    Image(systemName: item.iconName)
-                        .font(.system(size: 24))
-                        .foregroundColor(.white)
-                }
-
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Text(item.name)
-                            .font(.system(size: 17, weight: .bold))
-                            .foregroundColor(Color("priemary texts"))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
-
-                        Spacer()
-
-                        Image(systemName: "arrow.right")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(Color("priemary texts"))
-                    }
-
-                    Text(item.stageLabel)
-                        .font(.system(size: 13))
-                        .foregroundColor(Color("faded text"))
-
-                    HStack(spacing: 8) {
-                        Text("\(Int(item.progress * 100))%")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(Color("priemary texts"))
-
-                        GeometryReader { geo in
-                            ZStack(alignment: .leading) {
-                                Capsule()
-                                    .fill(Color.gray.opacity(0.2))
-                                    .frame(height: 6)
-
-                                Capsule()
-                                    .fill(Color("appOrange"))
-                                    .frame(width: geo.size.width * CGFloat(item.progress), height: 6)
-                            }
-                        }
-                        .frame(height: 6)
-                    }
-
-                    Text(item.lastUpdated)
-                        .font(.system(size: 11))
-                        .foregroundColor(Color("faded text"))
-                }
+        // CHANGE: النافيجيشن لينك صار مخفي تمامًا (opacity 0) بالخلفية —
+        // هذا يشيل سهم الـ"disclosure chevron" التلقائي اللي كان List
+        // يضيفه على يمين الصف (السهم "الخارجي")، بدون ما نأثر على إن
+        // الكرت لسه قابل للضغط والانتقال لصفحة البزنس.
+        ZStack {
+            NavigationLink(destination: projectDashBoard(businessID: item.id)) {
+                EmptyView()
             }
-            .padding(16)
-            .background(Color("boxes"))
-            .cornerRadius(20)
-            .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 6)
+            .opacity(0)
+
+            // CHANGE: الخط المظلل صار برا صندوق الكرت (مو جواه)، جنبه من
+            // برا — عشان يبين واضح إنه تلميح منفصل على إن الكرت يُسحب،
+            // مو جزء من محتوى الكرت نفسه.
+            HStack(spacing: 10) {
+                HStack(spacing: 16) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color("appGreen"))
+                            .frame(width: 54, height: 54)
+
+                        Image(systemName: item.iconName)
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Text(item.name)
+                                .font(.system(size: 17, weight: .bold))
+                                .foregroundColor(Color("priemary texts"))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
+
+                            Spacer()
+
+                            Image(systemName: "arrow.right")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(Color("priemary texts"))
+                        }
+
+                        Text(item.stageLabel)
+                            .font(.system(size: 13))
+                            .foregroundColor(Color("faded text"))
+
+                        HStack(spacing: 8) {
+                            Text("\(Int(item.progress * 100))%")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(Color("priemary texts"))
+
+                            GeometryReader { geo in
+                                ZStack(alignment: .leading) {
+                                    Capsule()
+                                        .fill(Color.gray.opacity(0.2))
+                                        .frame(height: 6)
+
+                                    Capsule()
+                                        .fill(Color("appOrange"))
+                                        .frame(width: geo.size.width * CGFloat(item.progress), height: 6)
+                                }
+                            }
+                            .frame(height: 6)
+                        }
+
+                        Text(item.lastUpdated)
+                            .font(.system(size: 11))
+                            .foregroundColor(Color("faded text"))
+                    }
+                }
+                .padding(16)
+                .background(Color("boxes"))
+                .cornerRadius(20)
+                .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 6)
+
+                // CHANGE: خط صغير مظلل (swipe hint) برا الكرت تمامًا —
+                // تلميح بصري خفيف إن الكرت يُسحب، مو زر ولا رابط.
+                Capsule()
+                    .fill(Color.gray.opacity(0.25))
+                    .frame(width: 4, height: 28)
+            }
         }
-        .buttonStyle(PlainButtonStyle())
     }
 }
 

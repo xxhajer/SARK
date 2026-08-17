@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "streamline_arrow-roadmap.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "streamline_arrow-roadmap.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },

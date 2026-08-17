@@ -141,7 +141,13 @@ struct Business: Identifiable, Codable {
     }
 
     // MARK: Derived budget numbers
-    var spent: Double { expenses.reduce(0) { $0 + $1.amount } }
+    // CHANGE: كانت "Spent" تجمع كل المصاريف حتى المخططة (Planned) اللي
+    // لسه ما تنفذت — عشان كذا أي بجت جديد يجيب من الـ AI يطلع "١٠٠٪
+    // مستخدم" فورًا حتى قبل ما اليوزر يصرف أي شيء فعليًا. الحين "Spent"
+    // يحسب بس المصاريف المؤكدة إنها اتنفذت (status == "Paid").
+    var spent: Double {
+        expenses.filter { $0.status == "Paid" }.reduce(0) { $0 + $1.amount }
+    }
     var remaining: Double { budgetTotal - spent }
     var usedPercentage: Int {
         guard budgetTotal > 0 else { return 0 }

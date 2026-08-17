@@ -26,6 +26,10 @@ struct AddExpenseView: View {
     @State private var selectedCategory: String = "Design"
     @State private var selectedDate = Date()
     @State private var notes: String = ""
+    // CHANGE: صار فيه اختيار وقت إضافة الفاتورة نفسها إذا هي منفذة فعليًا
+    // أو لسه مخططة — قبل كذا كل فاتورة تنحسب "منفذة" تلقائيًا فيصير
+    // الـ"Used %" غير منطقي.
+    @State private var isExecuted: Bool = true
 
     let categories = [
         CategoryItem(name: "Design", assetName: "PaintBrush"),
@@ -194,6 +198,35 @@ struct AddExpenseView: View {
                     }
                     .padding(.horizontal)
 
+                    // MARK: - Executed / Not Executed
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Did you already pay this?")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(Color("priemary texts"))
+
+                        HStack(spacing: 10) {
+                            Button(action: { isExecuted = true }) {
+                                Text("Executed")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundColor(isExecuted ? .white : Color("priemary texts"))
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 44)
+                                    .background(isExecuted ? Color("appGreen") : Color("Boxes"))
+                                    .cornerRadius(14)
+                            }
+                            Button(action: { isExecuted = false }) {
+                                Text("Not Executed")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundColor(!isExecuted ? .white : Color("priemary texts"))
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 44)
+                                    .background(!isExecuted ? Color("appGreen") : Color("Boxes"))
+                                    .cornerRadius(14)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+
                     // MARK: - Notes Input Field
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Notes (optional)")
@@ -245,7 +278,7 @@ struct AddExpenseView: View {
             category: selectedCategory,
             date: formattedDate,
             amount: amountValue,
-            status: "Paid",
+            status: isExecuted ? "Paid" : "Planned",
             notes: notes,
             assetName: assetName
         )

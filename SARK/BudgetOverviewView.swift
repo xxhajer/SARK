@@ -17,6 +17,9 @@ struct BudgetOverviewView: View {
     @State private var isShowingAddExpense = false
     @State private var isLoading = false
     @State private var errorMessage: String? = nil
+    // CHANGE: أضفنا طريقة تحذفين فيها البجت كامل لو ما عجبتك وتولّدينها
+    // من جديد — قبل كذا ما كان فيه أي خيار حذف.
+    @State private var showResetConfirm = false
 
     private var businessIndex: Int? { store.index(of: businessID) }
     private var business: Business? {
@@ -24,8 +27,10 @@ struct BudgetOverviewView: View {
         return store.businesses[idx]
     }
 
+    // CHANGE: كانت تعرض آخر 4 مصاريف بالبيت اوفرفيو، صار مزدحم بالشاشة —
+    // اليوزر طلب يبين بس 2 هنا (والباقي يشوفه من "View All").
     private var recentExpenses: [Expense] {
-        Array((business?.expenses ?? []).suffix(4).reversed())
+        Array((business?.expenses ?? []).suffix(2).reversed())
     }
 
     var body: some View {
@@ -57,7 +62,18 @@ struct BudgetOverviewView: View {
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.7)
                             Spacer()
-                            Color.clear.frame(width: 18, height: 18)
+                            Menu {
+                                Button(role: .destructive) {
+                                    showResetConfirm = true
+                                } label: {
+                                    Label("Delete Budget", systemImage: "trash")
+                                }
+                            } label: {
+                                Image(systemName: "ellipsis")
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .foregroundColor(Color("priemary text"))
+                                    .frame(width: 18, height: 18)
+                            }
                         }
                         .padding(.horizontal)
                         .padding(.top, 10)
@@ -227,7 +243,7 @@ struct BudgetOverviewView: View {
                             } else {
                                 VStack(spacing: 0) {
                                     ForEach(Array(recentExpenses.enumerated()), id: \.element.id) { index, expense in
-                                        NavigationLink(destination: ExpenseDetailView(expense: expense)) {
+                                        NavigationLink(destination: ExpenseDetailView(businessID: businessID, expenseID: expense.id)) {
                                             HStack(spacing: 14) {
                                                 Image(expense.assetName)
                                                     .resizable()
@@ -238,9 +254,11 @@ struct BudgetOverviewView: View {
                                                     Text(expense.title)
                                                         .font(.system(size: 14, weight: .semibold))
                                                         .foregroundColor(Color("priemary text"))
+                                                        .multilineTextAlignment(.leading)
                                                     Text(expense.date)
                                                         .font(.system(size: 12))
                                                         .foregroundColor(Color("faded text"))
+                                                        .multilineTextAlignment(.leading)
                                                 }
                                                 Spacer()
                                                 Text(expense.amountFormatted)
@@ -297,6 +315,24 @@ struct BudgetOverviewView: View {
         .task {
             await loadBudgetIfNeeded()
         }
+        .confirmationDialog("Delete this entire budget?", isPresented: $showResetConfirm, titleVisibility: .visible) {
+            Button("Delete Budget", role: .destructive) {
+                resetBudget()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This removes all expenses and lets you generate a fresh budget.")
+        }
+    }
+
+    // CHANGE: يمسح البجت والمصاريف كاملة عشان تولّدين وحدة جديدة من الصفر.
+    private func resetBudget() {
+        guard let idx = businessIndex else { return }
+        store.businesses[idx].budgetTotal = 0
+        store.businesses[idx].expenses = []
+        store.businesses[idx].isBudgetSufficient = true
+        store.businesses[idx].budgetFeasibilityNote = ""
+        Task { await loadBudgetIfNeeded(forceReload: true) }
     }
 
     private var loadingView: some View {

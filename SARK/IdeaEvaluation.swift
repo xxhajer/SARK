@@ -9,7 +9,6 @@ struct IdeaEvaluationView: View {
     var onReject: (() -> Void)? = nil
 
     // متغير للتحكم بفتح صفحة تسمية المشروع (بعد Accept) أو الرود ماب مباشرة
-    // (لو البزنس متقبل مسبقًا وجايين من صفحة الداشبورد)
     @State private var navigateToNaming: Bool = false
     @State private var navigateToRoadmap: Bool = false
 
@@ -106,7 +105,7 @@ struct IdeaEvaluationView: View {
                         .cornerRadius(16)
                         .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 6)
 
-                        // Metrics Grid (4 Cards - Updated Unified Shadow)
+                        // Metrics Grid (4 Cards مع التلوين: أحمر، أصفر، أخضر)
                         HStack(spacing: 10) {
                             EvaluationMetricCard(title: "Market Demand", score: marketDemand)
                             EvaluationMetricCard(title: "Feasibility", score: feasibility)
@@ -146,7 +145,6 @@ struct IdeaEvaluationView: View {
 
                         // Action Buttons
                         if isAccepted {
-                            // بزنس متقبل مسبقًا (رود ماب موجود أو راجعين له من الداشبورد)
                             Button(action: {
                                 navigateToRoadmap = true
                             }) {
@@ -161,7 +159,6 @@ struct IdeaEvaluationView: View {
                             .buttonStyle(PrimaryAppButtonStyle())
                             .padding(.top, 8)
                         } else {
-                            // أول مرة يشوف التقييم — يقرر يتقبل الفكرة أو يرفضها
                             HStack(spacing: 12) {
                                 Button(action: {
                                     rejectIdea()
@@ -199,11 +196,9 @@ struct IdeaEvaluationView: View {
         }
         .background(Color("Background").ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
-        // Accept → صفحة تسمية المشروع، ثم من هناك للرود ماب
         .navigationDestination(isPresented: $navigateToNaming) {
             NameYourProjectView(businessID: businessID, onFinishCreation: onFinishCreation)
         }
-        // بزنس متقبل مسبقًا → الرود ماب مباشرة
         .navigationDestination(isPresented: $navigateToRoadmap) {
             RoadmapView(businessID: businessID, onFinishCreation: onFinishCreation)
         }
@@ -227,7 +222,7 @@ struct IdeaEvaluationView: View {
         }
     }
 
-    // MARK: - استدعاء Gemini API (أو استخدام النتيجة المخزنة سابقًا لهذا المشروع)
+    // MARK: - استدعاء Gemini API
     private func loadEvaluation() async {
         guard let idx = businessIndex else {
             isLoading = false
@@ -235,9 +230,6 @@ struct IdeaEvaluationView: View {
             return
         }
 
-        // إذا كانت النتيجة محفوظة مسبقًا لهذا المشروع، اعرضها مباشرة بدون نداء جديد.
-        // (نستثني النتائج القديمة اللي محفوظة من قبل ما نضيف اسم البزنس، عشان
-        // تنعاد وتاخذ اسم نظيف من الـ AI بدل الاسم المقصوص من نص الفكرة.)
         if let cached = store.businesses[idx].evaluation, !cached.suggestedBusinessName.isEmpty {
             populate(from: cached)
             isLoading = false
@@ -261,8 +253,6 @@ struct IdeaEvaluationView: View {
             populate(from: result)
             if let idx = businessIndex {
                 store.businesses[idx].evaluation = result
-                // CHANGE: نستبدل الاسم المؤقت (أول جزء من نص الفكرة) باسم
-                // نظيف يصيغه الـ AI نفسه بناءً على فكرة المستخدم.
                 let cleanName = result.suggestedBusinessName.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !cleanName.isEmpty {
                     store.businesses[idx].name = cleanName
@@ -271,8 +261,6 @@ struct IdeaEvaluationView: View {
             isLoading = false
         } catch {
             isLoading = false
-            // CHANGE: رجعناها رسالة نظيفة لليوزر بعد ما شخصنا السبب الحقيقي
-            // (كان 429 rate limit من Gemini، مو مشكلة نت أو مفتاح).
             errorMessage = GeminiServiceError.userFacingMessage(for: error, action: "analyze your idea")
         }
     }
@@ -290,10 +278,23 @@ struct IdeaEvaluationView: View {
     }
 }
 
-// MARK: - Private Helper Component: Metric Card (Fixed Shadow)
+// MARK: - Metric Card Component (تلوين الأرقام: أحمر، أصفر، أخضر)
 private struct EvaluationMetricCard: View {
     let title: String
     let score: Int
+
+    private var scoreColor: Color {
+        switch score {
+        case 0...49:
+            return .red
+        case 50...79:
+            return .yellow
+        case 80...100:
+            return Color("appGreen")
+        default:
+            return Color("priemary texts")
+        }
+    }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -303,12 +304,9 @@ private struct EvaluationMetricCard: View {
                 .multilineTextAlignment(.center)
                 .frame(height: 28)
 
-            // CHANGE: هالأرقام (Market Demand, Feasibility, Competition,
-            // Risk Level) هي أصلاً نسب من 0-100 — أضفنا علامة % عشان توضح
-            // إنها نسبة مو رقم عادي، بدل ما تفهم غلط.
             Text("\(score)%")
                 .font(.system(size: 20, weight: .bold))
-                .foregroundColor(Color("priemary texts"))
+                .foregroundColor(scoreColor)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 14)

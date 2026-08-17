@@ -43,9 +43,7 @@ struct NotificationsView: View {
                         Text("Daily reminders")
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundColor(.black)
-                        Text("One nudge a day to keep your streak going")
-                            .font(.system(size: 13))
-                            .foregroundColor(.fadedText)
+                       
                     }
                     Spacer()
                     Toggle("", isOn: $dailyReminders)
@@ -71,25 +69,9 @@ struct NotificationsView: View {
                     // كروت الإشعارات
                     VStack(spacing: 14) {
 
-                        HStack(spacing: 12) {
-                            Text("🔥")
-                                .font(.system(size: 20))
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text("Keep your streak alive")
-                                    .font(.system(size: 15, weight: .semibold))
-                                    .foregroundColor(.black)
-                                Text("Today · Don't lose your 12-day streak")
-                                    .font(.system(size: 13))
-                                    .foregroundColor(.fadedText)
-                            }
-                            Spacer()
-                        }
-                        .padding(16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color.white)
-                                .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 3)
-                        )
+                    
+                        
+                        
 
                         HStack(spacing: 12) {
                             Image(systemName: "chart.bar.doc.horizontal")

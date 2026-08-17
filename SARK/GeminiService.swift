@@ -207,7 +207,7 @@ enum GeminiService {
         [
           {
             "monthLabel": "<matching the timeframe below, e.g. 'Month 1' or 'Week 1', numbered sequentially>",
-            "title": "<short stage title>",
+            "title": "<STRICT MAX 3 words / 24 characters — a short punchy stage name, e.g. 'Market Research', 'Get Licensed', 'Soft Launch'. Never a full sentence or a list of things.>",
             "iconName": "<MUST be exactly one of these values, copied verbatim — do not invent, modify, or use any icon outside this list: \(iconList)>",
             "description": "<1-2 sentence description of what this stage covers>",
             "priorityReason": "<short reason this stage is prioritized where it is>",
@@ -223,6 +223,8 @@ enum GeminiService {
         For "objectives": decide the count yourself based on genuine complexity — analyze how much real work that specific stage actually requires. A simple stage might only need 2-3 objectives; a demanding, multi-part stage might need 7-10. Never default to a fixed number like 3 for every stage — pad nothing, skip nothing real.
 
         For "iconName": this app has a fixed icon design and must never deviate from it. Only ever use one of the exact icon names listed above, verbatim, with no substitutions.
+
+        CRITICAL — SHORT TITLES: "title" must be at most 3 words and 24 characters, a punchy stage name only (not a sentence, not multiple things joined together). Put any extra detail in "description" instead — never lengthen "title" to fit more information in it.
 
         Business idea: \(ideaText)
         Industry: \(industry)
@@ -256,8 +258,12 @@ enum GeminiService {
             let icon = allowedStageIcons.contains(raw.iconName)
                 ? raw.iconName
                 : allowedStageIcons[index % allowedStageIcons.count]
+            // CHANGE: شبكة أمان لو الـ AI تجاهل تعليمة "عنوان قصير" — نقصّه
+            // عند آخر كلمة كاملة بدل ما نعرض عنوان طويل يكسر التصميم، بدون
+            // أي نقاط "..." (اليوزر ما يبيها تظهر مقصوصة بدون توضيح).
+            let title = shortenedStageTitle(raw.title)
             return RoadmapStage(
-                title: raw.title,
+                title: title,
                 subtitle: subtitle,
                 progressPercentage: 0,
                 state: state,
@@ -269,6 +275,23 @@ enum GeminiService {
                 resources: raw.resources
             )
         }
+    }
+
+    // CHANGE: عنوان الستيج لازم يكون قصير (اليوزر اشتكت إن الأسماء طويلة
+    // مرة). البرومبت يطلب من الـ AI عنوان بحد أقصى 3 كلمات/24 حرف، وهذا
+    // شبكة أمان لو التزم أو ما التزم — تقص عند آخر كلمة كاملة تحت الحد،
+    // بدون أي "..." زيادة.
+    private static func shortenedStageTitle(_ title: String, limit: Int = 24) -> String {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed.count > limit else { return trimmed }
+        let words = trimmed.split(separator: " ")
+        var result = ""
+        for word in words {
+            let candidate = result.isEmpty ? String(word) : result + " " + word
+            if candidate.count > limit { break }
+            result = candidate
+        }
+        return result.isEmpty ? String(trimmed.prefix(limit)) : result
     }
 
     // Maps the timeline the founder picked in TellUsAboutYouView to how many
@@ -330,6 +353,8 @@ enum GeminiService {
         }
 
         Create between 4 and 8 realistic starting expenses a founder in this industry would actually need, with amounts that together add up to totalBudget.
+
+        CRITICAL — ONE THING PER EXPENSE: Each expense must be a SINGLE, atomic, distinct cost item with its own short, specific title (e.g. "Shop Rent Deposit", "POS System", "3-Month Staff Visas"). NEVER bundle multiple unrelated costs into one expense with a combined title like "Rent, Marketing & Staff Visas" or "Branding, POS Hardware & Pre-Launch Marketing" — split each of those into its own separate expense entry instead, even if that means going slightly above 8 items. A human reading the title should immediately know it's exactly one thing, not a list.
 
         CRITICAL: Do not artificially shrink totalBudget or the expenses to fit inside the founder's stated budget range just to make it look feasible. Estimate the real cost first, from the actual idea, location, and the market data below. Only after that, compare it honestly against what the founder said they have — and flag it via isBudgetSufficient/feasibilityNote if there's a real gap, exactly like how a careful human advisor would never pretend an unrealistic budget is fine.
 
