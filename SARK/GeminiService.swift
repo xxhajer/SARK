@@ -76,6 +76,21 @@ struct BudgetGenerationResult {
     let statedBudget: Double
 }
 
+// CHANGE: كارد "Business Health" كانت ثابتة دايمًا تقول "Good" بدون أي
+// معنى فعلي. بدلناها بكارد "Trend Insight" — نصيحة مبنية على معرفة الـ AI
+// العامة بترندات التواصل الاجتماعي (تيك توك/إكس) المرتبطة بمجال المشروع:
+// إما ترند يستفيد منه، أو سلوك يفضل يتجنبه.
+// ملاحظة مهمة: هذا مو سحب مباشر ولحظي من تيك توك أو إكس (ما عندنا صلاحية
+// API لهذي المنصات) — هو تحليل الـ AI لأنماط وترندات شائعة بمجال مشابه،
+// فيه احتمال يكون قديم شوي، مو "لحظي" ١٠٠٪.
+struct TrendTip: Codable {
+    var trendTitle: String
+    var insight: String
+    var recommendation: String
+    // "leverage" = فرصة يستفيد منها، "avoid" = سلوك/فخ يبتعد عنه
+    var stance: String
+}
+
 enum GeminiServiceError: LocalizedError {
     case invalidRequest
     case emptyContent
@@ -451,6 +466,48 @@ enum GeminiService {
             feasibilityNote: raw.feasibilityNote ?? "",
             statedBudget: raw.founderStatedBudgetAmount?.value ?? raw.totalBudget.value
         )
+    }
+
+    // MARK: - Trend Tip generation
+    // كارد قصيرة على الداشبورد تعطي نصيحة واحدة مبنية على ترند حالي بمجال
+    // المشروع — إما "استفيد من هذا" أو "ابتعد عن هذا عشان مشروعك ينجح أكثر".
+    static func generateTrendTip(
+        ideaText: String,
+        industry: String,
+        location: String
+    ) async throws -> TrendTip {
+        let monthLabel = DateFormatter.localizedString(from: Date(), dateStyle: .long, timeStyle: .none)
+        // CHANGE: seed رقمي عشوائي عشان كل توليد يطلع زاوية/ترند مختلف
+        // (مو نفس الجملة كل مرة) — بدون كذا الموديل كان يميل يرجع نفس
+        // الإجابة الأكثر احتمالًا كل مرة حتى مع نفس المدخلات بالضبط.
+        let variationSeed = Int.random(in: 1...9999)
+
+        let prompt = """
+        \(plannerPersona)
+
+        You closely follow social media trends (TikTok, X/Twitter, Instagram, Snapchat) as they relate to small businesses. Today is \(monthLabel). Give the founder ONE short, specific, actionable insight — either a trend they should lean into right now, or a common trap/behavior they should avoid — that is clearly and specifically tied to THIS exact business idea below, not a generic tip that could apply to any business in the industry.
+
+        Respond ONLY with a JSON object matching this exact schema, with no extra text before or after it:
+
+        {
+          "trendTitle": "<a punchy 3-6 word headline naming the trend or pattern, specific enough that it could only apply to this kind of business, e.g. 'Matcha drinks are trending' or 'Overposting kills engagement'>",
+          "insight": "<1-2 sentences explaining what's happening and why it matters specifically for THIS business, referencing something concrete from the idea below>",
+          "recommendation": "<1-2 sentences of concrete, specific action this exact founder should take because of it>",
+          "stance": "<either \\"leverage\\" if this is an opportunity to ride, or \\"avoid\\" if this is a trap/mistake to steer clear of>"
+        }
+
+        CRITICAL — BE SPECIFIC AND HONEST: Don't invent a fake real-time statistic or claim you pulled this live from TikTok/X right now — you don't have live access to those platforms. Instead, draw on real, realistic patterns you know are common in this industry and in social-media-driven consumer behavior. Make it feel like real, current advice a plugged-in consultant would give, not generic filler that ignores the specific idea.
+
+        CRITICAL — VARY YOUR ANSWER: Don't always default to the single most obvious trend for this industry. Pick a genuinely useful angle — could be about content style, pricing psychology, packaging, delivery apps, a seasonal moment, a platform-specific behavior, or a founder mistake — and vary it meaningfully each time you're asked. (Variation seed: \(variationSeed) — use this only to pick a different angle than usual, never mention it in your answer.)
+
+        Business idea: \(ideaText)
+        Industry: \(industry)
+        City: \(location)
+        """
+
+        let fullPrompt = prompt + languageInstruction(for: ideaText)
+        let jsonData = try await requestJSON(prompt: fullPrompt)
+        return try JSONDecoder().decode(TrendTip.self, from: jsonData)
     }
 
     // MARK: - Real-data grounding

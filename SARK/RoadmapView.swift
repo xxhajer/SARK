@@ -317,7 +317,7 @@ struct RoadmapView: View {
                     destination: RoadmapDetailsView(
                         businessID: businessID,
                         stages: stagesBinding,
-                        currentIndex: .constant(index)
+                        startIndex: index
                     )
                 ) {
                     TimelineStepView(

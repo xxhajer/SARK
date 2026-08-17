@@ -6,12 +6,25 @@ struct RoadmapDetailsView: View {
 
     let businessID: UUID
     @Binding var stages: [RoadmapStage]
-    @Binding var currentIndex: Int
+
+    // CHANGE: كانت currentIndex عبارة عن Binding<Int> توصل من RoadmapView
+    // كـ ".constant(index)" — وهذا نوع Binding "ثابت" ما يقدر يتغيّر أبدًا،
+    // فلما زر "Proceed to Next Stage" يحاول يزيدها (currentIndex += 1)،
+    // التغيير ما يوصل لأي مكان ولا تعيد الشاشة رسم نفسها بالمرحلة الجاية —
+    // عشان كذا الزر كان "يضغط بس ما يودي". الحين currentIndex قيمة حالة
+    // (@State) حقيقية جوه هذي الشاشة نفسها، تقدر تتغيّر فعليًا.
+    @State private var currentIndex: Int
 
     @State private var isDescriptionExpanded: Bool = true
     @State private var isObjectivesExpanded: Bool = true
     @State private var isResourcesExpanded: Bool = false
     @State private var copiedResource: String? = nil
+
+    init(businessID: UUID, stages: Binding<[RoadmapStage]>, startIndex: Int) {
+        self.businessID = businessID
+        self._stages = stages
+        self._currentIndex = State(initialValue: startIndex)
+    }
 
     // MARK: - Computed Properties
     private var currentStage: RoadmapStage {

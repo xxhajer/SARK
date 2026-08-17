@@ -52,6 +52,14 @@ struct Business: Identifiable, Codable {
     // نقدر نعرض رقم العجز الحقيقي بالواجهة، مثل "عندك عجز SAR 25,000".
     var statedBudget: Double = 0
 
+    // CHANGE: نحفظ آخر "Trend Insight" ولّده الـ AI عشان يبين على الداشبورد
+    // بدل "Business Health" الثابتة، ويضل محفوظ حتى لو سكرت التطبيق.
+    var trendTip: TrendTip?
+    // CHANGE: تاريخ آخر مرة اتولدت فيه النصيحة — عشان تتجدد تلقائيًا كل
+    // فترة بدل ما تضل نفس الجملة للأبد وتحس إنها "ثابتة" مو مرتبطة بترند
+    // حقيقي متغير.
+    var trendTipGeneratedAt: Date?
+
     init(
         id: UUID = UUID(),
         name: String,
@@ -91,7 +99,7 @@ struct Business: Identifiable, Codable {
              marketScope,
              budgetRange, experience, goal, timeline, riskTolerance, isAccepted,
              evaluation, roadmapStages, budgetTotal, expenses,
-             isBudgetSufficient, budgetFeasibilityNote, statedBudget
+             isBudgetSufficient, budgetFeasibilityNote, statedBudget, trendTip, trendTipGeneratedAt
     }
 
     init(from decoder: Decoder) throws {
@@ -119,6 +127,16 @@ struct Business: Identifiable, Codable {
         isBudgetSufficient = try container.decodeIfPresent(Bool.self, forKey: .isBudgetSufficient) ?? true
         budgetFeasibilityNote = try container.decodeIfPresent(String.self, forKey: .budgetFeasibilityNote) ?? ""
         statedBudget = try container.decodeIfPresent(Double.self, forKey: .statedBudget) ?? 0
+        trendTip = try container.decodeIfPresent(TrendTip.self, forKey: .trendTip)
+        trendTipGeneratedAt = try container.decodeIfPresent(Date.self, forKey: .trendTipGeneratedAt)
+    }
+
+    // كم يوم مر من آخر تحديث للنصيحة — تستخدمها الشاشة عشان تعرف تجدد
+    // تلقائيًا لو مرت فترة، بدل ما تضل نفس النصيحة للأبد.
+    var trendTipIsStale: Bool {
+        guard let generatedAt = trendTipGeneratedAt else { return true }
+        let days = Calendar.current.dateComponents([.day], from: generatedAt, to: Date()).day ?? 0
+        return days >= 3
     }
 
     // MARK: Derived progress (drives the Dashboard + My Businesses card)
