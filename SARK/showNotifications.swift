@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NotificationsView: View {
     @Environment(\.dismiss) var dismiss
+    @ObservedObject private var loc = LocalizationManager.shared
     @State private var dailyReminders = true
 
     var body: some View {
@@ -19,7 +20,7 @@ struct NotificationsView: View {
             ScrollView {
                 // الهيدر
                 ZStack {
-                    Text("Notifications")
+                    Text(L("Notifications"))
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -40,7 +41,7 @@ struct NotificationsView: View {
                 // كرت Daily reminders
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Daily reminders")
+                        Text(L("Daily reminders"))
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundColor(.black)
                        
@@ -61,7 +62,7 @@ struct NotificationsView: View {
 
                 if dailyReminders {
                     // عنوان Recent
-                    Text("Recent")
+                    Text(L("Recent"))
                         .font(.system(size: 15, weight: .medium))
                         .foregroundColor(.fadedText)
                         .padding(.bottom, 15)
@@ -78,10 +79,10 @@ struct NotificationsView: View {
                                 .font(.system(size: 18))
                                 .foregroundColor(.greeen)
                             VStack(alignment: .leading, spacing: 3) {
-                                Text("Progress reminder")
+                                Text(L("Progress reminder"))
                                     .font(.system(size: 15, weight: .semibold))
                                     .foregroundColor(.black)
-                                Text("yesterday · your project is one step closer")
+                                Text(L("yesterday · your project is one step closer"))
                                     .font(.system(size: 13))
                                     .foregroundColor(.fadedText)
                             }
@@ -96,10 +97,10 @@ struct NotificationsView: View {
 
                         HStack(spacing: 12) {
                             VStack(alignment: .leading, spacing: 3) {
-                                Text("Check-in")
+                                Text(L("Check-in"))
                                     .font(.system(size: 15, weight: .semibold))
                                     .foregroundColor(.black)
-                                Text("2days ago · Pick Up where you left off")
+                                Text(L("2days ago · Pick Up where you left off"))
                                     .font(.system(size: 13))
                                     .foregroundColor(.fadedText)
                             }

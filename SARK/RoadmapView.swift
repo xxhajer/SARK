@@ -4,6 +4,7 @@ import SwiftUI
 struct RoadmapView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var store = BusinessStore.shared
+    @ObservedObject private var loc = LocalizationManager.shared
     let businessID: UUID
     var onFinishCreation: ((UUID) -> Void)? = nil
 
@@ -149,7 +150,7 @@ struct RoadmapView: View {
     private var loadingView: some View {
         VStack {
             Spacer()
-            ProgressView("Building your roadmap...")
+            ProgressView(L("Building your roadmap..."))
                 .progressViewStyle(CircularProgressViewStyle())
             Spacer()
         }
@@ -169,7 +170,7 @@ struct RoadmapView: View {
             Button(action: {
                 Task { await loadRoadmapIfNeeded(forceReload: true) }
             }) {
-                Text("Try Again")
+                Text(L("Try Again"))
             }
             .buttonStyle(PrimaryAppButtonStyle())
             .frame(maxWidth: 200)
@@ -215,7 +216,7 @@ struct RoadmapView: View {
                     .foregroundColor(Color("priemary texts"))
             }
 
-            Text(business?.name ?? "Roadmap")
+            Text(business?.name ?? L("Roadmap"))
                 .font(.system(size: 22, weight: .bold))
                 .foregroundColor(Color("priemary texts"))
                 .lineLimit(1)
@@ -232,12 +233,12 @@ struct RoadmapView: View {
 
             HStack {
                 HStack(spacing: 4) {
-                    Text("Stage")
+                    Text(L("Stage"))
                         .foregroundColor(Color("faded text"))
                     Text("\(currentStageDisplayNumber)")
                         .foregroundColor(Color("appOrange"))
                         .bold()
-                    Text("of")
+                    Text(L("of"))
                         .foregroundColor(Color("faded text"))
                     Text("\(totalStages)")
                         .foregroundColor(Color("priemary texts"))
@@ -247,7 +248,7 @@ struct RoadmapView: View {
 
                 Spacer()
 
-                Text("\(overallPercentage)% overall")
+                Text("\(overallPercentage)% \(L("overall"))")
                     .font(.system(size: 15, weight: .bold))
                     .foregroundColor(Color("appOrange"))
             }
@@ -280,7 +281,7 @@ struct RoadmapView: View {
                 .animation(.easeInOut(duration: 0.3), value: percentage)
 
             VStack(spacing: 2) {
-                Text(currentStage?.monthLabel.isEmpty == false ? currentStage!.monthLabel.uppercased() : "STAGE")
+                Text(currentStage?.monthLabel.isEmpty == false ? currentStage!.monthLabel.uppercased() : L("STAGE"))
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(Color("faded text"))
                     .tracking(1.2)
@@ -307,7 +308,7 @@ struct RoadmapView: View {
         VStack(alignment: .leading, spacing: 14) {
             ForEach(Array(stages.indices.enumerated()), id: \.element) { (index: Int, _) in
                 if index == currentStageIndex + 1, stages[index].state == .upcoming {
-                    Text("Up next")
+                    Text(L("Up next"))
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(Color("faded text"))
                         .padding(.top, 6)
@@ -353,11 +354,11 @@ struct RoadmapCompletionSheet: View {
             }
 
             VStack(spacing: 12) {
-                Text("Congratulations! 🎉")
+                Text(L("Congratulations! 🎉"))
                     .font(.system(size: 26, weight: .bold))
                     .foregroundColor(Color("priemary texts"))
 
-                Text("You've completed all stages in your business roadmap. Your project is ready for launch!")
+                Text(L("You've completed all stages in your business roadmap. Your project is ready for launch!"))
                     .font(.system(size: 15, weight: .regular))
                     .foregroundColor(Color("faded text"))
                     .multilineTextAlignment(.center)
@@ -367,7 +368,7 @@ struct RoadmapCompletionSheet: View {
             Spacer()
 
             Button(action: onDismiss) {
-                Text("Go to Dashboard")
+                Text(L("Go to Dashboard"))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)

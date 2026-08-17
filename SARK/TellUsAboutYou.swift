@@ -3,6 +3,7 @@ import SwiftUI
 struct TellUsAboutYouView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var store = BusinessStore.shared
+    @ObservedObject private var loc = LocalizationManager.shared
     var ideaText: String = ""
     var industry: String = "General"
     var onFinishCreation: ((UUID) -> Void)? = nil
@@ -62,11 +63,11 @@ struct TellUsAboutYouView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 24) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Tell us a bit about you")
+                        Text(L("Tell us a bit about you"))
                             .font(.system(size: 28, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
 
-                        Text("This helps us personalize your journey.")
+                        Text(L("This helps us personalize your journey."))
                             .font(.system(size: 15))
                             .foregroundColor(Color("faded text"))
                     }
@@ -86,7 +87,7 @@ struct TellUsAboutYouView: View {
                     Button(action: {
                         if isFormValid {
                             let trimmed = ideaText.trimmingCharacters(in: .whitespacesAndNewlines)
-                            let businessName = trimmed.isEmpty ? "New Business" : String(trimmed.prefix(40))
+                            let businessName = trimmed.isEmpty ? L("New Business") : String(trimmed.prefix(40))
                             let newBusiness = Business(
                                 name: businessName,
                                 ideaText: ideaText,
@@ -105,7 +106,7 @@ struct TellUsAboutYouView: View {
                         }
                     }) {
                         HStack(spacing: 8) {
-                            Text("Evaluate My Idea")
+                            Text(L("Evaluate My Idea"))
                                 .font(.system(size: 16, weight: .semibold))
                             Image(systemName: "arrow.right")
                                 .font(.system(size: 15, weight: .bold))
@@ -162,9 +163,9 @@ private struct CustomPickerRow: View {
 
     var body: some View {
         Menu {
-            Picker(title, selection: $selection) {
+            Picker(L(title), selection: $selection) {
                 ForEach(options, id: \.self) { option in
-                    Text(option).tag(option)
+                    Text(L(option)).tag(option)
                 }
             }
         } label: {
@@ -194,10 +195,10 @@ private struct CustomPickerRow: View {
                 }
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(title)
+                    Text(L(title))
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(Color("priemary texts"))
-                    Text(selection)
+                    Text(selection == placeholder ? L(placeholder) : L(selection))
                         .font(.system(size: 13))
                         .foregroundColor(selection == placeholder ? Color("faded text") : Color("priemary texts"))
                 }

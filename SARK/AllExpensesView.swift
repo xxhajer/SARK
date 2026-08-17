@@ -58,7 +58,7 @@ struct AllExpensesView: View {
 
                         Spacer()
 
-                        Text("All Expenses")
+                        Text(L("All Expenses"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Color("priemary text"))
 
@@ -93,9 +93,9 @@ struct AllExpensesView: View {
                         .cornerRadius(20)
 
                         Menu {
-                            Button("This Month") { selectedFilter = "This Month" }
-                            Button("Last Month") { selectedFilter = "Last Month" }
-                            Button("All Time") { selectedFilter = "All Time" }
+                            Button(L("This Month")) { selectedFilter = "This Month" }
+                            Button(L("Last Month")) { selectedFilter = "Last Month" }
+                            Button(L("All Time")) { selectedFilter = "All Time" }
                         } label: {
                             Image(systemName: "slider.horizontal.3")
                                 .font(.system(size: 18, weight: .medium))
@@ -111,7 +111,7 @@ struct AllExpensesView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         HStack(alignment: .top) {
                             VStack(alignment: .leading, spacing: 6) {
-                                Text("Total Spent")
+                                Text(L("Total Spent"))
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundColor(Color("faded text"))
 
@@ -123,7 +123,7 @@ struct AllExpensesView: View {
                             Spacer()
 
                             HStack(spacing: 4) {
-                                Text(selectedFilter)
+                                Text(L(selectedFilter))
                                     .font(.system(size: 13, weight: .semibold))
                                 Image(systemName: "chevron.down")
                                     .font(.system(size: 11, weight: .semibold))
@@ -138,7 +138,7 @@ struct AllExpensesView: View {
 
                     // MARK: - Expenses List with Navigation Links
                     if filteredExpenses.isEmpty {
-                        Text("No expenses yet.")
+                        Text(L("No expenses yet."))
                             .font(.system(size: 14))
                             .foregroundColor(Color("faded text"))
                             .frame(maxWidth: .infinity)

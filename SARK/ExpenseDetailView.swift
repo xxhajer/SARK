@@ -15,6 +15,7 @@ struct ExpenseDetailView: View {
     @ObservedObject private var store = BusinessStore.shared
     @Environment(\.dismiss) private var dismiss
     @State private var showDeleteConfirm = false
+    @ObservedObject private var loc = LocalizationManager.shared
 
     private var businessIndex: Int? { store.index(of: businessID) }
     private var expenseIndex: Int? {
@@ -44,14 +45,14 @@ struct ExpenseDetailView: View {
                         .font(.system(size: 20, weight: .bold))
 
                     Group {
-                        Text("Category: \(expense.category)")
-                        Text("Date: \(expense.date)")
-                        Text("Payment Method: \(expense.paymentMethod)")
+                        Text("\(L("Category")): \(expense.category)")
+                        Text("\(L("Date")): \(expense.date)")
+                        Text("\(L("Payment Method")): \(expense.paymentMethod)")
                         if !expense.notes.isEmpty {
-                            Text("Notes: \(expense.notes)")
+                            Text("\(L("Notes")): \(expense.notes)")
                         }
                         if !expense.attachmentName.isEmpty {
-                            Text("Attachment: \(expense.attachmentName) (\(expense.attachmentSize))")
+                            Text("\(L("Attachment")): \(expense.attachmentName) (\(expense.attachmentSize))")
                         }
                     }
                     .font(.system(size: 14))
@@ -59,15 +60,15 @@ struct ExpenseDetailView: View {
 
                     // MARK: - Executed / Not Executed toggle
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Status")
+                        Text(L("Status"))
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
 
                         HStack(spacing: 10) {
-                            statusButton(title: "Executed", isSelected: isPaid) {
+                            statusButton(title: L("Executed"), isSelected: isPaid) {
                                 setStatus("Paid")
                             }
-                            statusButton(title: "Not Executed", isSelected: !isPaid) {
+                            statusButton(title: L("Not Executed"), isSelected: !isPaid) {
                                 setStatus("Planned")
                             }
                         }
@@ -77,7 +78,7 @@ struct ExpenseDetailView: View {
                     Button(role: .destructive, action: {
                         showDeleteConfirm = true
                     }) {
-                        Text("Delete Expense")
+                        Text(L("Delete Expense"))
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundColor(.red)
                             .frame(maxWidth: .infinity)
@@ -89,17 +90,17 @@ struct ExpenseDetailView: View {
                 }
                 .padding()
             } else {
-                Text("This expense no longer exists.")
+                Text(L("This expense no longer exists."))
                     .foregroundColor(.gray)
                     .padding()
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .confirmationDialog("Delete this expense?", isPresented: $showDeleteConfirm, titleVisibility: .visible) {
-            Button("Delete", role: .destructive) {
+        .confirmationDialog(L("Delete this expense?"), isPresented: $showDeleteConfirm, titleVisibility: .visible) {
+            Button(L("Delete"), role: .destructive) {
                 deleteExpense()
             }
-            Button("Cancel", role: .cancel) {}
+            Button(L("Cancel"), role: .cancel) {}
         }
     }
 

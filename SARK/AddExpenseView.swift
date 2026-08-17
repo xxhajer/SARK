@@ -18,6 +18,7 @@ struct CategoryItem: Identifiable {
 struct AddExpenseView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject private var store = BusinessStore.shared
+    @ObservedObject private var loc = LocalizationManager.shared
     let businessID: UUID
 
     // Form States
@@ -76,7 +77,7 @@ struct AddExpenseView: View {
 
                         Spacer()
 
-                        Text("Add Expense")
+                        Text(L("Add Expense"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
 
@@ -90,7 +91,7 @@ struct AddExpenseView: View {
 
                     // MARK: - Amount Input Field
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Amount")
+                        Text(L("Amount"))
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
 
@@ -99,7 +100,7 @@ struct AddExpenseView: View {
                                 .font(.system(size: 20, weight: .semibold))
                                 .foregroundColor(Color("faded text"))
 
-                            TextField("0.00", text: $amount)
+                            TextField(L("0.00"), text: $amount)
                                 .keyboardType(.decimalPad)
                                 .font(.system(size: 26, weight: .bold))
                                 .foregroundColor(Color("priemary texts"))
@@ -122,11 +123,11 @@ struct AddExpenseView: View {
 
                     // MARK: - Expense Name Input Field
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Expense Name")
+                        Text(L("Expense Name"))
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
 
-                        TextField("e.g Logo Design", text: $expenseName)
+                        TextField(L("e.g Logo Design"), text: $expenseName)
                             .font(.system(size: 15))
                             .foregroundColor(Color("priemary texts"))
                             .padding(.horizontal, 16)
@@ -138,7 +139,7 @@ struct AddExpenseView: View {
 
                     // MARK: - Category Selection Grid
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Category")
+                        Text(L("Category"))
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
 
@@ -153,7 +154,7 @@ struct AddExpenseView: View {
                                             .scaledToFit()
                                             .frame(width: 28, height: 28)
 
-                                        Text(category.name)
+                                        Text(L(category.name))
                                             .font(.system(size: 12, weight: .medium))
                                             .foregroundColor(Color("priemary texts"))
                                     }
@@ -176,7 +177,7 @@ struct AddExpenseView: View {
 
                     // MARK: - Date Picker Field
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Date")
+                        Text(L("Date"))
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
 
@@ -200,13 +201,13 @@ struct AddExpenseView: View {
 
                     // MARK: - Executed / Not Executed
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Did you already pay this?")
+                        Text(L("Did you already pay this?"))
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
 
                         HStack(spacing: 10) {
                             Button(action: { isExecuted = true }) {
-                                Text("Executed")
+                                Text(L("Executed"))
                                     .font(.system(size: 13, weight: .semibold))
                                     .foregroundColor(isExecuted ? .white : Color("priemary texts"))
                                     .frame(maxWidth: .infinity)
@@ -215,7 +216,7 @@ struct AddExpenseView: View {
                                     .cornerRadius(14)
                             }
                             Button(action: { isExecuted = false }) {
-                                Text("Not Executed")
+                                Text(L("Not Executed"))
                                     .font(.system(size: 13, weight: .semibold))
                                     .foregroundColor(!isExecuted ? .white : Color("priemary texts"))
                                     .frame(maxWidth: .infinity)
@@ -229,11 +230,11 @@ struct AddExpenseView: View {
 
                     // MARK: - Notes Input Field
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Notes (optional)")
+                        Text(L("Notes (optional)"))
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
 
-                        TextField("Add a note...", text: $notes, axis: .vertical)
+                        TextField(L("Add a note..."), text: $notes, axis: .vertical)
                             .lineLimit(3...4)
                             .font(.system(size: 15))
                             .foregroundColor(Color("priemary texts"))
@@ -247,7 +248,7 @@ struct AddExpenseView: View {
                     Button(action: {
                         saveExpense()
                     }) {
-                        Text("Save Expense")
+                        Text(L("Save Expense"))
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)

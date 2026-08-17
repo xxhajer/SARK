@@ -5,6 +5,15 @@ struct projectDashBoard: View {
     @ObservedObject private var store = BusinessStore.shared
     let businessID: UUID
 
+    // CHANGE: بالتجربة، المستخدمين ما فهمو إن أيقونات "Quick Actions" كلها
+    // قابلة للضغط (بس اللي جربوا البجت فهموا بالصدفة). أول محاولة كانت
+    // حركة ضغط (scale/opacity) بس المستخدمة ما عجبتها الحركة نفسها.
+    // الحين بدّلناها بتصميم "مرفوع" ثابت (ظل أعمق + مسافة أكبر تحت
+    // البطاقة) يخلي كل أيقونة تبين زي زر حقيقي بارز عن الخلفية، بدون
+    // أي حركة أو كتابة إضافية على البطاقة نفسها.
+    @AppStorage("hasSeenQuickActionsHint") private var hasSeenQuickActionsHint = false
+    @ObservedObject private var loc = LocalizationManager.shared
+
     private var business: Business? {
         store.businesses.first(where: { $0.id == businessID })
     }
@@ -78,7 +87,7 @@ struct projectDashBoard: View {
                                 )
 
                             VStack(alignment: .leading, spacing: 6) {
-                                Text("Current Stage")
+                                Text(L("Current Stage"))
                                     .foregroundColor(.fadedText)
                                     .font(.system(size: 15, weight: .medium))
                                 ExpandableText(
@@ -91,7 +100,7 @@ struct projectDashBoard: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
 
                             VStack(alignment: .trailing, spacing: 6) {
-                                Text("Overall Progress")
+                                Text(L("Overall Progress"))
                                     .foregroundColor(.black)
                                     .font(.system(size: 15, weight: .semibold))
                                     .lineLimit(1)
@@ -130,7 +139,7 @@ struct projectDashBoard: View {
                         Image("goal")
 
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Today's Goal")
+                            Text(L("Today's Goal"))
                                 .foregroundColor(.insideTheGreen)
                                 .font(.system(size: 16, weight: .medium))
                             ExpandableText(
@@ -156,7 +165,7 @@ struct projectDashBoard: View {
                     // Card 3: Milestone & Health
                     HStack(alignment: .top, spacing: 12) {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Next Milestone")
+                            Text(L("Next Milestone"))
                                 .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(.black)
 
@@ -193,7 +202,7 @@ struct projectDashBoard: View {
                         // ميديا بمجال المشروع (استفيدي منه / ابتعدي عنه).
                         NavigationLink(destination: TrendTipView(businessID: businessID)) {
                             VStack(spacing: 8) {
-                                Text("Trend Insight")
+                                Text(L("Trend Insight"))
                                     .font(.system(size: 14, weight: .bold))
                                     .foregroundColor(.black)
                                     .lineLimit(1)
@@ -207,7 +216,7 @@ struct projectDashBoard: View {
 
                                 Spacer()
 
-                                Text(business?.trendTip?.trendTitle ?? "Tap for a tip")
+                                Text(business?.trendTip?.trendTitle ?? L("Tap for a tip"))
                                     .font(.system(size: 12, weight: .bold))
                                     .foregroundColor(.black)
                                     .multilineTextAlignment(.center)
@@ -219,7 +228,8 @@ struct projectDashBoard: View {
                             .background(
                                 RoundedRectangle(cornerRadius: 20)
                                     .fill(Color.white)
-                                    .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+                                    .shadow(color: Color.black.opacity(0.18), radius: 10, x: 0, y: 6)
+                                    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1)
                             )
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -229,9 +239,26 @@ struct projectDashBoard: View {
 
                     // Card 4: Quick Actions (Unified Dimensions)
                     VStack(alignment: .leading, spacing: 14) {
-                        Text("Quick Actions")
+                        Text(L("Quick Actions"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.black)
+
+                        // CHANGE: تلميح يبين مرة وحدة بس أول ما تفتحين
+                        // الداشبورد، يفهّم إن الأيقونات تحت تُضغط وتفتح
+                        // صفحات — يختفي تلقائي أول ما تضغطين أي وحدة منهم.
+                        if !hasSeenQuickActionsHint {
+                            HStack(spacing: 6) {
+                                Image(systemName: "hand.tap.fill")
+                                    .font(.system(size: 12))
+                                Text(L("Tap any icon below to open it"))
+                                    .font(.system(size: 12, weight: .medium))
+                            }
+                            .foregroundColor(Color("appGreen"))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(Color("appGreen").opacity(0.1))
+                            .cornerRadius(12)
+                        }
 
                         HStack(spacing: 12) {
                             NavigationLink(destination: IdeaEvaluationView(businessID: businessID)) {
@@ -239,11 +266,12 @@ struct projectDashBoard: View {
                                     RoundedRectangle(cornerRadius: 18)
                                         .fill(Color.white)
                                         .frame(height: 88)
-                                        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+                                        .shadow(color: Color.black.opacity(0.18), radius: 10, x: 0, y: 6)
+                                        .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1)
                                         .overlay(
                                             Image("ideaEva")
                                         )
-                                    Text("Idea Evaluation")
+                                    Text(L("Idea Evaluation"))
                                         .font(.system(size: 13, weight: .semibold))
                                         .foregroundColor(.black)
                                         .lineLimit(1)
@@ -252,17 +280,19 @@ struct projectDashBoard: View {
                                 .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .simultaneousGesture(TapGesture().onEnded { hasSeenQuickActionsHint = true })
 
                             NavigationLink(destination: BudgetOverviewView(businessID: businessID)) {
                                 VStack(spacing: 8) {
                                     RoundedRectangle(cornerRadius: 18)
                                         .fill(Color.white)
                                         .frame(height: 88)
-                                        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+                                        .shadow(color: Color.black.opacity(0.18), radius: 10, x: 0, y: 6)
+                                        .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1)
                                         .overlay(
                                             Image("Wallet")
                                         )
-                                    Text("Budget")
+                                    Text(L("Budget"))
                                         .font(.system(size: 13, weight: .semibold))
                                         .foregroundColor(.black)
                                         .lineLimit(1)
@@ -271,17 +301,19 @@ struct projectDashBoard: View {
                                 .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .simultaneousGesture(TapGesture().onEnded { hasSeenQuickActionsHint = true })
 
                             NavigationLink(destination: RoadmapView(businessID: businessID)) {
                                 VStack(spacing: 8) {
                                     RoundedRectangle(cornerRadius: 18)
                                         .fill(Color.white)
                                         .frame(height: 88)
-                                        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+                                        .shadow(color: Color.black.opacity(0.18), radius: 10, x: 0, y: 6)
+                                        .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1)
                                         .overlay(
                                             Image("Roadmap")
                                         )
-                                    Text("Roadmap")
+                                    Text(L("Roadmap"))
                                         .font(.system(size: 13, weight: .semibold))
                                         .foregroundColor(.black)
                                         .lineLimit(1)
@@ -290,6 +322,7 @@ struct projectDashBoard: View {
                                 .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .simultaneousGesture(TapGesture().onEnded { hasSeenQuickActionsHint = true })
                         }
 
                         Rectangle()
@@ -333,3 +366,4 @@ struct projectDashBoard: View {
         projectDashBoard(businessID: UUID())
     }
 }
+

@@ -20,6 +20,7 @@ struct BudgetOverviewView: View {
     // CHANGE: أضفنا طريقة تحذفين فيها البجت كامل لو ما عجبتك وتولّدينها
     // من جديد — قبل كذا ما كان فيه أي خيار حذف.
     @State private var showResetConfirm = false
+    @ObservedObject private var loc = LocalizationManager.shared
 
     private var businessIndex: Int? { store.index(of: businessID) }
     private var business: Business? {
@@ -66,7 +67,7 @@ struct BudgetOverviewView: View {
                                 Button(role: .destructive) {
                                     showResetConfirm = true
                                 } label: {
-                                    Label("Delete Budget", systemImage: "trash")
+                                    Label(L("Delete Budget"), systemImage: "trash")
                                 }
                             } label: {
                                 Image(systemName: "ellipsis")
@@ -80,10 +81,10 @@ struct BudgetOverviewView: View {
 
                         // MARK: Header Titles
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Budget Overview")
+                            Text(L("Budget Overview"))
                                 .font(.system(size: 20, weight: .bold))
                                 .foregroundColor(Color("priemary text"))
-                            Text("Track all project expenses in one place.")
+                            Text(L("Track all project expenses in one place."))
                                 .font(.system(size: 14))
                                 .foregroundColor(Color("faded text"))
                         }
@@ -101,7 +102,7 @@ struct BudgetOverviewView: View {
                                         .font(.system(size: 16))
                                         .foregroundColor(Color("appOrange"))
                                     Text(business.budgetFeasibilityNote.isEmpty
-                                         ? "Your stated budget may not be enough to realistically launch this business."
+                                         ? L("Your stated budget may not be enough to realistically launch this business.")
                                          : business.budgetFeasibilityNote)
                                         .font(.system(size: 13))
                                         .foregroundColor(Color("priemary text"))
@@ -110,7 +111,7 @@ struct BudgetOverviewView: View {
 
                                 HStack(spacing: 0) {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("Your Budget")
+                                        Text(L("Your Budget"))
                                             .font(.system(size: 12, weight: .medium))
                                             .foregroundColor(Color("faded text"))
                                         Text("SAR \(Int(business.statedBudget.rounded()))")
@@ -122,7 +123,7 @@ struct BudgetOverviewView: View {
                                     Divider().frame(height: 28)
 
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("Realistic Cost")
+                                        Text(L("Realistic Cost"))
                                             .font(.system(size: 12, weight: .medium))
                                             .foregroundColor(Color("faded text"))
                                         Text("SAR \(Int(business.budgetTotal.rounded()))")
@@ -135,7 +136,7 @@ struct BudgetOverviewView: View {
                                     Divider().frame(height: 28)
 
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("Shortfall")
+                                        Text(L("Shortfall"))
                                             .font(.system(size: 12, weight: .medium))
                                             .foregroundColor(Color("faded text"))
                                         Text("SAR \(Int(business.budgetShortfall.rounded()))")
@@ -156,7 +157,7 @@ struct BudgetOverviewView: View {
                         VStack(alignment: .leading, spacing: 16) {
                             HStack(alignment: .top) {
                                 VStack(alignment: .leading, spacing: 6) {
-                                    Text("Total Budget")
+                                    Text(L("Total Budget"))
                                         .font(.system(size: 14, weight: .medium))
                                         .foregroundColor(Color("faded text"))
                                     Text("SAR \(Int((business?.budgetTotal ?? 0).rounded()))")
@@ -172,7 +173,7 @@ struct BudgetOverviewView: View {
 
                             HStack(spacing: 0) {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Spent")
+                                    Text(L("Spent"))
                                         .font(.system(size: 13, weight: .medium))
                                         .foregroundColor(Color("faded text"))
                                     Text("SAR \(Int((business?.spent ?? 0).rounded()))")
@@ -184,7 +185,7 @@ struct BudgetOverviewView: View {
                                 Divider().frame(height: 30)
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Remaining")
+                                    Text(L("Remaining"))
                                         .font(.system(size: 13, weight: .medium))
                                         .foregroundColor(Color("faded text"))
                                     Text("SAR \(Int((business?.remaining ?? 0).rounded()))")
@@ -197,7 +198,7 @@ struct BudgetOverviewView: View {
                                 Divider().frame(height: 30)
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Used")
+                                    Text(L("Used"))
                                         .font(.system(size: 13, weight: .medium))
                                         .foregroundColor(Color("faded text"))
                                     Text("\(business?.usedPercentage ?? 0)%")
@@ -217,14 +218,14 @@ struct BudgetOverviewView: View {
                         // MARK: Recent Expenses Section
                         VStack(spacing: 12) {
                             HStack {
-                                Text("Recent Expenses")
+                                Text(L("Recent Expenses"))
                                     .font(.system(size: 16, weight: .bold))
                                     .foregroundColor(Color("priemary text"))
 
                                 Spacer()
 
                                 NavigationLink(destination: AllExpensesView(businessID: businessID)) {
-                                    Text("View All")
+                                    Text(L("View All"))
                                         .font(.system(size: 14, weight: .semibold))
                                         .foregroundColor(Color("appGreen"))
                                 }
@@ -232,7 +233,7 @@ struct BudgetOverviewView: View {
                             .padding(.horizontal, 4)
 
                             if recentExpenses.isEmpty {
-                                Text("No expenses yet.")
+                                Text(L("No expenses yet."))
                                     .font(.system(size: 13))
                                     .foregroundColor(Color("faded text"))
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -290,7 +291,7 @@ struct BudgetOverviewView: View {
                             HStack(spacing: 8) {
                                 Image(systemName: "plus")
                                     .font(.system(size: 16, weight: .bold))
-                                Text("Add Expense")
+                                Text(L("Add Expense"))
                                     .font(.system(size: 16, weight: .semibold))
                             }
                             .foregroundColor(.white)
@@ -315,13 +316,13 @@ struct BudgetOverviewView: View {
         .task {
             await loadBudgetIfNeeded()
         }
-        .confirmationDialog("Delete this entire budget?", isPresented: $showResetConfirm, titleVisibility: .visible) {
-            Button("Delete Budget", role: .destructive) {
+        .confirmationDialog(L("Delete this entire budget?"), isPresented: $showResetConfirm, titleVisibility: .visible) {
+            Button(L("Delete Budget"), role: .destructive) {
                 resetBudget()
             }
-            Button("Cancel", role: .cancel) {}
+            Button(L("Cancel"), role: .cancel) {}
         } message: {
-            Text("This removes all expenses and lets you generate a fresh budget.")
+            Text(L("This removes all expenses and lets you generate a fresh budget."))
         }
     }
 
@@ -338,7 +339,7 @@ struct BudgetOverviewView: View {
     private var loadingView: some View {
         VStack {
             Spacer()
-            ProgressView("Building your budget...")
+            ProgressView(L("Building your budget..."))
                 .progressViewStyle(CircularProgressViewStyle())
             Spacer()
         }
@@ -358,7 +359,7 @@ struct BudgetOverviewView: View {
             Button(action: {
                 Task { await loadBudgetIfNeeded(forceReload: true) }
             }) {
-                Text("Try Again")
+                Text(L("Try Again"))
             }
             .buttonStyle(PrimaryAppButtonStyle())
             .frame(maxWidth: 200)

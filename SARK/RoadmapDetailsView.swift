@@ -3,6 +3,7 @@ import UIKit
 
 struct RoadmapDetailsView: View {
     @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var loc = LocalizationManager.shared
 
     let businessID: UUID
     @Binding var stages: [RoadmapStage]
@@ -142,7 +143,7 @@ struct RoadmapDetailsView: View {
     private var actionButton: some View {
         Button(action: completeAndProceed) {
             HStack(spacing: 8) {
-                Text(currentIndex < stages.count - 1 ? "Proceed to Next Stage" : "Finish Stage")
+                Text(currentIndex < stages.count - 1 ? L("Proceed to Next Stage") : L("Finish Stage"))
                     .font(.system(size: 18, weight: .bold))
                 
                 Image(systemName: "checkmark.circle.fill")
@@ -202,7 +203,7 @@ struct RoadmapDetailsView: View {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("\(calculatedPercentage)% complete")
+                Text("\(calculatedPercentage)% \(L("complete"))")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(Color("priemary text"))
                     .animation(.default, value: calculatedPercentage)
@@ -236,7 +237,7 @@ struct RoadmapDetailsView: View {
                         .font(.system(size: 18))
                         .foregroundColor(Color("priemary text"))
 
-                    Text("Description")
+                    Text(L("Description"))
                         .font(.system(size: 17, weight: .bold))
                         .foregroundColor(Color("priemary text"))
 
@@ -262,7 +263,7 @@ struct RoadmapDetailsView: View {
                         .padding(.top, 1)
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Prioritized based on:")
+                        Text(L("Prioritized based on:"))
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundColor(Color("long texts"))
 
@@ -301,7 +302,7 @@ struct RoadmapDetailsView: View {
                         .font(.system(size: 18))
                         .foregroundColor(Color("priemary text"))
 
-                    Text("Objectives")
+                    Text(L("Objectives"))
                         .font(.system(size: 17, weight: .bold))
                         .foregroundColor(Color("priemary text"))
 
@@ -366,7 +367,7 @@ struct RoadmapDetailsView: View {
                         .font(.system(size: 18))
                         .foregroundColor(Color("priemary text"))
 
-                    Text("Resources")
+                    Text(L("Resources"))
                         .font(.system(size: 17, weight: .bold))
                         .foregroundColor(Color("priemary text"))
 
@@ -381,7 +382,7 @@ struct RoadmapDetailsView: View {
                 Divider()
 
                 if currentStage.resources.isEmpty {
-                    Text("No resources yet for this stage.")
+                    Text(L("No resources yet for this stage."))
                         .font(.system(size: 13))
                         .foregroundColor(Color("faded text"))
                 } else {
@@ -409,7 +410,7 @@ struct RoadmapDetailsView: View {
                                     Spacer(minLength: 0)
 
                                     if copiedResource == resource {
-                                        Text("Copied")
+                                        Text(L("Copied"))
                                             .font(.system(size: 11, weight: .semibold))
                                             .foregroundColor(Color("appGreen"))
                                     }

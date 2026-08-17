@@ -2,6 +2,7 @@ import SwiftUI
 
 struct StartFromScratchView: View {
     @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var loc = LocalizationManager.shared
     var onFinishCreation: ((UUID) -> Void)? = nil
     var onReject: (() -> Void)? = nil
 
@@ -11,9 +12,20 @@ struct StartFromScratchView: View {
     @State private var navigateToNext: Bool = false
 
     private let characterLimit = 1000
+    // CHANGE: أضفنا حد أدنى لعدد الكلمات — كانت الفكرة ممكن تنكتب بكلمة أو
+    // كلمتين بس، وهذا مايكفي للـ AI يفهم المشروع صح ويعطي تقييم/رود ماب/
+    // بجت دقيق. الحين لازم ٢٠ كلمة على الأقل قبل ما يقدر يكمل.
+    private let minWordCount = 20
+
+    private var wordCount: Int {
+        ideaText
+            .split(whereSeparator: { $0.isWhitespace || $0.isNewline })
+            .filter { !$0.isEmpty }
+            .count
+    }
 
     private var isFormValid: Bool {
-        !ideaText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selectedIndustry != nil
+        wordCount >= minWordCount && selectedIndustry != nil
     }
 
     var body: some View {
@@ -39,12 +51,12 @@ struct StartFromScratchView: View {
 
                         // 1. Titles Section
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("What's your\nbusiness idea?")
+                            Text(L("What's your\nbusiness idea?"))
                                 .font(.system(size: 32, weight: .bold))
                                 .foregroundColor(Color("priemary texts"))
                                 .fixedSize(horizontal: false, vertical: true)
 
-                            Text("Describe your idea in a few sentences.")
+                            Text(L("Describe your idea in a few sentences."))
                                 .font(.system(size: 16))
                                 .foregroundColor(Color("faded text"))
                         }
@@ -58,7 +70,7 @@ struct StartFromScratchView: View {
                             VStack(alignment: .leading) {
                                 ZStack(alignment: .topLeading) {
                                     if ideaText.isEmpty {
-                                        Text("Describe your business idea...")
+                                        Text(L("Describe your business idea..."))
                                             .foregroundColor(Color("faded text"))
                                             .padding(.horizontal, 4)
                                             .padding(.vertical, 8)
@@ -80,6 +92,14 @@ struct StartFromScratchView: View {
                                 Spacer()
 
                                 HStack {
+                                    // CHANGE: عداد الكلمات الحين يبين وشو ينقص
+                                    // أو يأكد إنه كافي (يتلون أخضر لما يكفي).
+                                    Text(wordCount >= minWordCount
+                                         ? "✓ \(wordCount) \(L("words"))"
+                                         : "\(wordCount)/\(minWordCount) \(L("words minimum"))")
+                                        .font(.caption)
+                                        .foregroundColor(wordCount >= minWordCount ? Color("appGreen") : Color("appOrange"))
+
                                     Spacer()
                                     Text("\(ideaText.count)/\(characterLimit)")
                                         .font(.caption)
@@ -91,9 +111,18 @@ struct StartFromScratchView: View {
                         .frame(height: 200)
                         .shadow(color: Color.black.opacity(0.04), radius: 10, x: 0, y: 4)
 
+                        // CHANGE: رسالة توضيحية تحت المربع تفهّم اليوزر ليه
+                        // فيه حد أدنى — عشان الـ AI يقدر يشرح المشروع صح.
+                        if wordCount < minWordCount {
+                            Text("\(L("Write at least")) \(minWordCount) \(L("words so the AI can understand and explain your project accurately."))")
+                                .font(.system(size: 12))
+                                .foregroundColor(Color("faded text"))
+                                .padding(.top, -12)
+                        }
+
                         // 3. Industry Selection
                         VStack(alignment: .leading, spacing: 14) {
-                            Text("Select your industry")
+                            Text(L("Select your industry"))
                                 .font(.system(size: 16, weight: .semibold))
                                 .foregroundColor(Color("priemary texts"))
 
@@ -123,7 +152,7 @@ struct StartFromScratchView: View {
                             }
                         }) {
                             HStack {
-                                Text("Continue")
+                                Text(L("Continue"))
                                     .font(.system(size: 18, weight: .semibold))
                                 Image(systemName: "arrow.right")
                                     .font(.system(size: 18, weight: .semibold))
@@ -172,7 +201,7 @@ struct IndustryCard: View {
                     .scaledToFit()
                     .frame(width: 48, height: 48)
 
-                Text(title)
+                Text(L(title))
                     .font(.system(size: 15, weight: .bold))
                     .foregroundColor(Color("priemary texts"))
                     .multilineTextAlignment(.center)

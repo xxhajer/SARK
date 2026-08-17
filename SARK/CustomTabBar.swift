@@ -34,17 +34,18 @@ struct CustomTabBar: View {
 }
 
 struct TabBarItem: View {
+    @ObservedObject private var loc = LocalizationManager.shared
     let icon: String
     let title: String
     let isSelected: Bool
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             VStack(spacing: 4) {
                 Image(systemName: isSelected ? "\(icon).fill" : icon)
                     .font(.system(size: 20))
-                Text(title)
+                Text(L(title))
                     .font(.system(size: 11, weight: .regular))
             }
             .foregroundColor(isSelected ? .greeen : .fadedText)

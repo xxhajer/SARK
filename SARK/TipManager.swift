@@ -45,7 +45,7 @@ class TipManager {
     
     func getTodaysTip() -> String {
         guard !tips.isEmpty else {
-            return "Focus on solving a real\nproblem for your customers"
+            return L("Focus on solving a real\nproblem for your customers")
         }
         
         let calendar = Calendar.current
@@ -60,6 +60,6 @@ class TipManager {
     }
     
     func getRandomTip() -> String {
-        return tips.randomElement()?.text ?? "Keep growing your business!"
+        return tips.randomElement()?.text ?? L("Keep growing your business!")
     }
 }

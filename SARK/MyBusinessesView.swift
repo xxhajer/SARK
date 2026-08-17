@@ -15,6 +15,9 @@ struct MyBusinessesView: View {
     @State private var showDeleteAlert = false
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @ObservedObject private var streak = StreakManager.shared
+    // CHANGE: نراقب اللغة الحالية عشان الشاشة تعيد رسم نفسها فورًا لما
+    // اليوزر يبدّل اللغة من قائمة الحساب.
+    @ObservedObject private var loc = LocalizationManager.shared
 
     var filteredBusinesses: [Business] {
         if searchText.isEmpty {
@@ -52,17 +55,17 @@ struct MyBusinessesView: View {
                     .padding(.bottom, 4)
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("My Businesses")
+                        Text(L("My Businesses"))
                             .font(.system(size: 28, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
 
-                        Text("Manage and track all your ventures.")
+                        Text(L("Manage and track all your ventures."))
                             .font(.system(size: 15))
                             .foregroundColor(Color("faded text"))
                     }
                     .padding(.top, 8)
 
-                    Text("\(store.businesses.count) Active Businesses")
+                    Text("\(store.businesses.count) \(L("Active Businesses"))")
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(Color("priemary texts"))
                         .padding(.top, 18)
@@ -72,7 +75,7 @@ struct MyBusinessesView: View {
                             .foregroundColor(Color("faded text"))
                             .font(.system(size: 16))
 
-                        TextField("Search business..", text: $searchText)
+                        TextField(L("Search business.."), text: $searchText)
                             .font(.system(size: 15))
                             .foregroundColor(Color("priemary texts"))
                     }
@@ -91,7 +94,7 @@ struct MyBusinessesView: View {
                     VStack(spacing: 16) {
                         Spacer().frame(height: 30)
 
-                        Text("You have no\nbusinesses")
+                        Text(L("You have no\nbusinesses"))
                             .font(.system(size: 24, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
                             .multilineTextAlignment(.center)
@@ -101,7 +104,7 @@ struct MyBusinessesView: View {
                             .scaledToFit()
                             .frame(width: 72, height: 72)
 
-                        Text("Start your First!")
+                        Text(L("Start your First!"))
                             .font(.system(size: 20, weight: .bold))
                             .foregroundColor(Color("priemary texts"))
                             .padding(.top, 16)
@@ -109,7 +112,7 @@ struct MyBusinessesView: View {
                         Button(action: {
                             showNewBusiness = true
                         }) {
-                            Text("+New Business")
+                            Text(L("+New Business"))
                                 .font(.system(size: 16, weight: .semibold))
                         }
                         .buttonStyle(PrimaryAppButtonStyle())
@@ -144,7 +147,7 @@ struct MyBusinessesView: View {
                     Button(action: {
                         showNewBusiness = true
                     }) {
-                        Text("+ New Business")
+                        Text(L("+ New Business"))
                             .font(.system(size: 16, weight: .semibold))
                     }
                     .buttonStyle(PrimaryAppButtonStyle())
@@ -184,20 +187,24 @@ struct MyBusinessesView: View {
                 }
             )
         }
-        // CHANGE: نفس منطق حذف الحساب اللي كان بالبروفايل، نقلناه هنا.
-        .confirmationDialog("Account", isPresented: $showAccountMenu) {
-            Button("Delete Account", role: .destructive) {
+        // CHANGE: نفس منطق حذف الحساب اللي كان بالبروفايل، نقلناه هنا —
+        // وضفنا فيه خيار تبديل لغة الواجهة (عربي/إنجليزي).
+        .confirmationDialog(L("Account"), isPresented: $showAccountMenu) {
+            Button(loc.language == .en ? L("Switch to Arabic") : L("Switch to English")) {
+                loc.toggle()
+            }
+            Button(L("Delete Account"), role: .destructive) {
                 showDeleteAlert = true
             }
-            Button("Cancel", role: .cancel) {}
+            Button(L("Cancel"), role: .cancel) {}
         }
-        .alert("Delete Your Account", isPresented: $showDeleteAlert) {
-            Button("Cancel", role: .cancel) {}
-            Button("Delete", role: .destructive) {
+        .alert(L("Delete Your Account"), isPresented: $showDeleteAlert) {
+            Button(L("Cancel"), role: .cancel) {}
+            Button(L("Delete"), role: .destructive) {
                 deleteAccount()
             }
         } message: {
-            Text("This will erase your name and all your businesses, and take you back to the beginning. Are you sure?")
+            Text(L("This will erase your name and all your businesses, and take you back to the beginning. Are you sure?"))
         }
     }
 

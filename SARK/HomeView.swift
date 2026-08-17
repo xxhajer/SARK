@@ -15,6 +15,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @ObservedObject private var loc = LocalizationManager.shared
     @State private var userName = UserDefaults.standard.string(forKey: "userName") ?? "User"
     // CHANGE: المنتورة قالت لا تحطون "My Businesses" بالهوم، خلوا بس
     // "New Business" — ولما تضغطينها تفتح مباشرة فورم فكرة بزنس جديد
@@ -97,7 +98,7 @@ struct HomeView: View {
     private var greetingSection: some View {
         VStack(spacing: 12) {
             HStack(spacing: 8) {
-                Text("Hello, \(userName)!")
+                Text("\(L("Hello")), \(userName)!")
                     .font(.system(size: 36, weight: .bold))
                     .foregroundColor(Color("priemary texts"))
 
@@ -107,7 +108,7 @@ struct HomeView: View {
                     .frame(width: 36, height: 36)
             }
 
-            Text("Ready to grow\nyour business?")
+            Text(L("Ready to grow\nyour business?"))
                 .font(.system(size: 24, weight: .medium))
                 .foregroundColor(Color("long texts"))
                 .multilineTextAlignment(.center)
@@ -127,11 +128,11 @@ struct HomeView: View {
                     .frame(width: 44, height: 44)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("New Business")
+                    Text(L("New Business"))
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(Color("priemary texts"))
 
-                    Text("Start a new business with AI guidance")
+                    Text(L("Start a new business with AI guidance"))
                         .font(.system(size: 13, weight: .regular))
                         .foregroundColor(Color("long texts"))
                 }
@@ -163,7 +164,7 @@ struct HomeView: View {
                 .frame(width: 40, height: 40)
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("Today's Tip")
+                Text(L("Today's Tip"))
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(Color("priemary texts"))
 
