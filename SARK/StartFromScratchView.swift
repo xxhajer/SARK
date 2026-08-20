@@ -14,8 +14,8 @@ struct StartFromScratchView: View {
     private let characterLimit = 1000
     // CHANGE: أضفنا حد أدنى لعدد الكلمات — كانت الفكرة ممكن تنكتب بكلمة أو
     // كلمتين بس، وهذا مايكفي للـ AI يفهم المشروع صح ويعطي تقييم/رود ماب/
-    // بجت دقيق. الحين لازم ٢٠ كلمة على الأقل قبل ما يقدر يكمل.
-    private let minWordCount = 20
+    // بجت دقيق. الحين لازم ١٠ كلمات على الأقل قبل ما يقدر يكمل.
+    private let minWordCount = 10
 
     private var wordCount: Int {
         ideaText
